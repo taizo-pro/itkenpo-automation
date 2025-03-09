@@ -1,0 +1,16 @@
+{
+	"manifest_version": 3,
+	"name": "関東IT健保フォーム自動入力",
+	"version": "1.0",
+	"description": "関東IT健保の施設抽選申込フォームに保存した情報を自動入力します",
+	"permissions": ["storage", "activeTab", "scripting"],
+	"action": {
+		"default_popup": "popup.html"
+	},
+	"content_scripts": [
+		{
+			"matches": ["*://*.its-kenpo.or.jp/*"],
+			"js": ["content.js"]
+		}
+	]
+}

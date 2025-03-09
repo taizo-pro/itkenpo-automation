@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>関東IT健保フォーム自動入力</title>
+  <style>
+    /* 基本スタイル */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: linear-gradient(135deg, #e6f0ff 0%, #e0e7ff 100%);
+      padding: 16px;
+      color: #333;
+      width: 400px;
+    }
+
+    .container {
+      max-width: 100%;
+      margin: 0 auto;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    .inner {
+      padding: 16px;
+    }
+
+    h1 {
+      font-size: 20px;
+      font-weight: bold;
+      text-align: center;
+      color: #4338ca;
+      margin-bottom: 16px;
+    }
+
+    /* タブ */
+    .tabs {
+      display: flex;
+      margin-bottom: 16px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .tab-button {
+      flex: 1;
+      padding: 8px 16px;
+      text-align: center;
+      font-weight: 500;
+      border: none;
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .tab-active {
+      background-color: #4338ca;
+      color: white;
+    }
+
+    .tab-inactive {
+      background-color: #e5e7eb;
+      color: #4b5563;
+    }
+
+    /* フォーム要素 */
+    .form-section {
+      margin-bottom: 16px;
+    }
+
+    .form-group {
+      margin-bottom: 8px;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: #4b5563;
+      margin-bottom: 4px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      font-size: 14px;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #4338ca;
+      box-shadow: 0 0 0 2px rgba(67, 56, 202, 0.3);
+    }
+
+    .date-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    /* ボタン */
+    .button {
+      width: 100%;
+      padding: 8px 16px;
+      background-color: #4338ca;
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .button:hover {
+      background-color: #3730a3;
+      transform: scale(1.02);
+    }
+
+    /* ステータスメッセージ */
+    .status {
+      text-align: center;
+      padding: 8px 0;
+    }
+
+    .success {
+      color: #047857;
+    }
+
+    .error {
+      color: #dc2626;
+    }
+
+    /* モーダル */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+    }
+
+    .modal-content {
+      background-color: white;
+      padding: 24px;
+      border-radius: 8px;
+      box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+      max-width: 320px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .modal-title {
+      font-size: 24px;
+      font-weight: bold;
+      color: #4338ca;
+      margin-bottom: 16px;
+    }
+
+    .modal-text {
+      color: #4b5563;
+      margin-bottom: 16px;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .visible {
+      display: flex;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="inner">
+      <h1>関東IT健保フォーム自動入力</h1>
+
+      <div class="tabs">
+        <button id="settingsTab" class="tab-button tab-active">設定</button>
+        <button id="fillTab" class="tab-button tab-inactive">自動入力</button>
+      </div>
+
+      <div id="settings" class="form-section">
+        <div class="form-group">
+          <label for="sign_no">記号</label>
+          <input type="text" id="sign_no" placeholder="例: 1234">
+        </div>
+
+        <div class="form-group">
+          <label for="insured_no">番号</label>
+          <input type="text" id="insured_no" placeholder="例: 5678">
+        </div>
+
+        <div class="form-group">
+          <label for="office_name">事業所名</label>
+          <input type="text" id="office_name" placeholder="例: 株式会社〇〇">
+        </div>
+
+        <div class="form-group">
+          <label for="kana_name">申込代表者名（カナ氏名）</label>
+          <input type="text" id="kana_name" placeholder="例: ヤマダ タロウ">
+        </div>
+
+        <div class="form-group">
+          <label for="birth_year">生年月日</label>
+          <div class="date-grid">
+            <select id="birth_year"></select>
+            <select id="birth_month"></select>
+            <select id="birth_day"></select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="gender">性別</label>
+          <select id="gender">
+            <option value="man">男性</option>
+            <option value="woman">女性</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="relationship">続柄</label>
+          <select id="relationship">
+            <option value="myself">本人（被保険者）</option>
+            <option value="family">家族（被扶養者）</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="contact_phone">連絡先電話番号</label>
+          <input type="text" id="contact_phone" placeholder="例: 09012345678">
+        </div>
+
+        <div class="form-group">
+          <label for="postal">郵便番号</label>
+          <input type="text" id="postal" placeholder="例: 1698516">
+        </div>
+
+        <div class="form-group">
+          <label for="state">都道府県</label>
+          <select id="state"></select>
+        </div>
+
+        <div class="form-group">
+          <label for="address">住所</label>
+          <input type="text" id="address" placeholder="例: 新宿区百人町2-27-6">
+        </div>
+
+        <div class="form-group">
+          <label for="stay_persons">宿泊人数</label>
+          <input type="number" id="stay_persons" min="1" placeholder="例: 2">
+        </div>
+
+        <div class="form-group">
+          <label for="hope_rooms">希望部屋数</label>
+          <select id="hope_rooms">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+          </select>
+        </div>
+
+        <button id="saveButton" class="button">保存</button>
+
+        <div id="status" class="status"></div>
+      </div>
+
+      <div id="fill" class="form-section hidden">
+        <p class="modal-text">「自動入力」ボタンをクリックすると、保存した情報がフォームに自動入力されます。</p>
+        <button id="fillButton" class="button">自動入力</button>
+        <div id="fillStatus" class="status"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 完了メッセージ用のモーダル -->
+  <div id="luckyModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-title">🎉 自動入力完了 🎉</div>
+      <p class="modal-text">フォームへの入力が完了しました！<br>抽選が当たりますように...🙏</p>
+      <button id="closeModal" class="button">閉じる</button>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
