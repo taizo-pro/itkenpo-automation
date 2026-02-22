@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ITS健保フォーム自動入力 ブックマークレット生成</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: linear-gradient(135deg, #e6f0ff 0%, #e0e7ff 100%);
+      padding: 16px;
+      color: #333;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    .inner {
+      padding: 16px;
+    }
+
+    h1 {
+      font-size: 20px;
+      font-weight: bold;
+      text-align: center;
+      color: #4338ca;
+      margin-bottom: 4px;
+    }
+
+    .subtitle {
+      font-size: 13px;
+      text-align: center;
+      color: #6b7280;
+      margin-bottom: 16px;
+    }
+
+    .form-group {
+      margin-bottom: 8px;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: #4b5563;
+      margin-bottom: 4px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      font-size: 16px;
+    }
+
+    select {
+      -webkit-appearance: none;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7280' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 32px;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #4338ca;
+      box-shadow: 0 0 0 2px rgba(67, 56, 202, 0.3);
+    }
+
+    .date-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .button {
+      width: 100%;
+      padding: 12px 16px;
+      background-color: #4338ca;
+      color: white;
+      font-weight: bold;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: all 0.3s;
+      -webkit-appearance: none;
+    }
+
+    .button:hover {
+      background-color: #3730a3;
+    }
+
+    .button:active {
+      transform: scale(0.98);
+    }
+
+    .button-save {
+      margin-bottom: 12px;
+    }
+
+    .button-generate {
+      background-color: #059669;
+    }
+
+    .button-generate:hover {
+      background-color: #047857;
+    }
+
+    .button-copy {
+      background-color: #d97706;
+      margin-top: 8px;
+    }
+
+    .button-copy:hover {
+      background-color: #b45309;
+    }
+
+    .status {
+      text-align: center;
+      padding: 8px 0;
+      font-size: 14px;
+    }
+
+    .success {
+      color: #047857;
+    }
+
+    .error {
+      color: #dc2626;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid #e5e7eb;
+      margin: 16px 0;
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: bold;
+      color: #4338ca;
+      margin-bottom: 8px;
+    }
+
+    .output-area {
+      display: none;
+      margin-top: 12px;
+    }
+
+    .output-area.visible {
+      display: block;
+    }
+
+    .bookmarklet-code {
+      width: 100%;
+      height: 80px;
+      padding: 8px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 12px;
+      font-family: monospace;
+      resize: vertical;
+      word-break: break-all;
+    }
+
+    .instructions {
+      margin-top: 16px;
+      padding: 12px;
+      background-color: #f9fafb;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+    }
+
+    .instructions h3 {
+      font-size: 14px;
+      font-weight: bold;
+      color: #4338ca;
+      margin-bottom: 8px;
+    }
+
+    .instructions ol {
+      padding-left: 20px;
+      font-size: 13px;
+      line-height: 1.8;
+      color: #4b5563;
+    }
+
+    .instructions li {
+      margin-bottom: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="inner">
+      <h1>ITS健保フォーム自動入力</h1>
+      <p class="subtitle">ブックマークレット生成ツール</p>
+
+      <div class="form-group">
+        <label for="sign_no">記号</label>
+        <input type="text" id="sign_no" placeholder="例: 1234" inputmode="numeric">
+      </div>
+
+      <div class="form-group">
+        <label for="insured_no">番号</label>
+        <input type="text" id="insured_no" placeholder="例: 5678" inputmode="numeric">
+      </div>
+
+      <div class="form-group">
+        <label for="office_name">事業所名</label>
+        <input type="text" id="office_name" placeholder="例: 株式会社〇〇">
+      </div>
+
+      <div class="form-group">
+        <label for="kana_name">申込代表者名（カナ氏名）</label>
+        <input type="text" id="kana_name" placeholder="例: ヤマダ タロウ">
+      </div>
+
+      <div class="form-group">
+        <label>生年月日</label>
+        <div class="date-grid">
+          <select id="birth_year"></select>
+          <select id="birth_month"></select>
+          <select id="birth_day"></select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="gender">性別</label>
+        <select id="gender">
+          <option value="man">男性</option>
+          <option value="woman">女性</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="relationship">続柄</label>
+        <select id="relationship">
+          <option value="myself">本人（被保険者）</option>
+          <option value="family">家族（被扶養者）</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="contact_phone">連絡先電話番号</label>
+        <input type="text" id="contact_phone" placeholder="例: 09012345678" inputmode="tel">
+      </div>
+
+      <div class="form-group">
+        <label for="postal">郵便番号</label>
+        <input type="text" id="postal" placeholder="例: 1698516" inputmode="numeric">
+      </div>
+
+      <div class="form-group">
+        <label for="state">都道府県</label>
+        <select id="state"></select>
+      </div>
+
+      <div class="form-group">
+        <label for="address">住所</label>
+        <input type="text" id="address" placeholder="例: 新宿区百人町2-27-6">
+      </div>
+
+      <div class="form-group">
+        <label for="stay_persons">宿泊人数</label>
+        <input type="number" id="stay_persons" min="1" placeholder="例: 2" inputmode="numeric">
+      </div>
+
+      <div class="form-group">
+        <label for="hope_rooms">希望部屋数</label>
+        <select id="hope_rooms">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+        </select>
+      </div>
+
+      <button id="saveButton" class="button button-save">設定を保存</button>
+      <div id="saveStatus" class="status"></div>
+
+      <hr class="divider">
+
+      <p class="section-title">ブックマークレット生成</p>
+      <button id="generateButton" class="button button-generate">ブックマークレットを生成</button>
+
+      <div id="outputArea" class="output-area">
+        <textarea id="bookmarkletCode" class="bookmarklet-code" readonly></textarea>
+        <button id="copyButton" class="button button-copy">コピー</button>
+        <div id="copyStatus" class="status"></div>
+
+        <div class="instructions">
+          <h3>iPhone Safari での保存手順</h3>
+          <ol>
+            <li>上の「コピー」ボタンをタップ</li>
+            <li>Safariで適当なページをブックマーク</li>
+            <li>ブックマーク一覧を開き、保存したブックマークを「編集」</li>
+            <li>URL欄を全選択して削除し、コピーしたコードを貼り付け</li>
+            <li>名前を「ITS健保自動入力」などに変更して保存</li>
+            <li>ITS健保の申込フォームページでブックマークをタップ!</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- 初期化 ---
+    document.addEventListener("DOMContentLoaded", function() {
+      initBirthDateSelects();
+      initPrefectureSelect();
+      loadFromStorage();
+
+      document.getElementById("saveButton").addEventListener("click", saveToStorage);
+      document.getElementById("generateButton").addEventListener("click", generateBookmarklet);
+      document.getElementById("copyButton").addEventListener("click", copyBookmarklet);
+    });
+
+    // --- 生年月日セレクト初期化 ---
+    function initBirthDateSelects() {
+      var yearSelect = document.getElementById("birth_year");
+      var monthSelect = document.getElementById("birth_month");
+
+      var currentYear = new Date().getFullYear();
+      for (var year = 1925; year <= currentYear; year++) {
+        var option = document.createElement("option");
+        option.value = year;
+        var eraYear = "";
+        if (year >= 2019) {
+          eraYear = "令和" + (year - 2018) + "年(" + year + "年)";
+        } else if (year >= 1989) {
+          eraYear = "平成" + (year - 1988) + "年(" + year + "年)";
+        } else if (year >= 1926) {
+          eraYear = "昭和" + (year - 1925) + "年(" + year + "年)";
+        } else {
+          eraYear = "大正" + (year - 1911) + "年(" + year + "年)";
+        }
+        option.textContent = eraYear;
+        yearSelect.appendChild(option);
+      }
+
+      for (var month = 1; month <= 12; month++) {
+        var option = document.createElement("option");
+        option.value = month;
+        option.textContent = month;
+        monthSelect.appendChild(option);
+      }
+
+      updateDaySelect();
+
+      yearSelect.addEventListener("change", updateDaySelect);
+      monthSelect.addEventListener("change", updateDaySelect);
+    }
+
+    // --- 日セレクト更新 ---
+    function updateDaySelect() {
+      var yearSelect = document.getElementById("birth_year");
+      var monthSelect = document.getElementById("birth_month");
+      var daySelect = document.getElementById("birth_day");
+
+      var year = parseInt(yearSelect.value) || new Date().getFullYear();
+      var month = parseInt(monthSelect.value) || 1;
+      var lastDay = new Date(year, month, 0).getDate();
+      var selectedDay = daySelect.value;
+
+      daySelect.innerHTML = "";
+      for (var day = 1; day <= lastDay; day++) {
+        var option = document.createElement("option");
+        option.value = day;
+        option.textContent = day;
+        daySelect.appendChild(option);
+      }
+
+      if (selectedDay && selectedDay <= lastDay) {
+        daySelect.value = selectedDay;
+      }
+    }
+
+    // --- 都道府県セレクト初期化 ---
+    function initPrefectureSelect() {
+      var stateSelect = document.getElementById("state");
+      var prefectures = [
+        {v:"1",t:"北海道"},{v:"2",t:"青森県"},{v:"3",t:"岩手県"},
+        {v:"4",t:"宮城県"},{v:"5",t:"秋田県"},{v:"6",t:"山形県"},
+        {v:"7",t:"福島県"},{v:"8",t:"茨城県"},{v:"9",t:"栃木県"},
+        {v:"10",t:"群馬県"},{v:"11",t:"埼玉県"},{v:"12",t:"千葉県"},
+        {v:"13",t:"東京都"},{v:"14",t:"神奈川県"},{v:"15",t:"新潟県"},
+        {v:"16",t:"富山県"},{v:"17",t:"石川県"},{v:"18",t:"福井県"},
+        {v:"19",t:"山梨県"},{v:"20",t:"長野県"},{v:"21",t:"岐阜県"},
+        {v:"22",t:"静岡県"},{v:"23",t:"愛知県"},{v:"24",t:"三重県"},
+        {v:"25",t:"滋賀県"},{v:"26",t:"京都府"},{v:"27",t:"大阪府"},
+        {v:"28",t:"兵庫県"},{v:"29",t:"奈良県"},{v:"30",t:"和歌山県"},
+        {v:"31",t:"鳥取県"},{v:"32",t:"島根県"},{v:"33",t:"岡山県"},
+        {v:"34",t:"広島県"},{v:"35",t:"山口県"},{v:"36",t:"徳島県"},
+        {v:"37",t:"香川県"},{v:"38",t:"愛媛県"},{v:"39",t:"高知県"},
+        {v:"40",t:"福岡県"},{v:"41",t:"佐賀県"},{v:"42",t:"長崎県"},
+        {v:"43",t:"熊本県"},{v:"44",t:"大分県"},{v:"45",t:"宮崎県"},
+        {v:"46",t:"鹿児島県"},{v:"47",t:"沖縄県"}
+      ];
+
+      var emptyOption = document.createElement("option");
+      emptyOption.value = "";
+      emptyOption.textContent = "選択してください";
+      stateSelect.appendChild(emptyOption);
+
+      for (var i = 0; i < prefectures.length; i++) {
+        var option = document.createElement("option");
+        option.value = prefectures[i].v;
+        option.textContent = prefectures[i].t;
+        stateSelect.appendChild(option);
+      }
+    }
+
+    // --- localStorage に保存 ---
+    function saveToStorage() {
+      var userData = {
+        sign_no: document.getElementById("sign_no").value,
+        insured_no: document.getElementById("insured_no").value,
+        office_name: document.getElementById("office_name").value,
+        kana_name: document.getElementById("kana_name").value,
+        birth_year: document.getElementById("birth_year").value,
+        birth_month: document.getElementById("birth_month").value,
+        birth_day: document.getElementById("birth_day").value,
+        gender: document.getElementById("gender").value,
+        relationship: document.getElementById("relationship").value,
+        contact_phone: document.getElementById("contact_phone").value,
+        postal: document.getElementById("postal").value,
+        state: document.getElementById("state").value,
+        address: document.getElementById("address").value,
+        stay_persons: document.getElementById("stay_persons").value,
+        hope_rooms: document.getElementById("hope_rooms").value
+      };
+
+      try {
+        localStorage.setItem("itskenpo_userdata", JSON.stringify(userData));
+        showStatus("saveStatus", "設定を保存しました！", "success");
+      } catch (e) {
+        showStatus("saveStatus", "保存に失敗しました", "error");
+      }
+    }
+
+    // --- localStorage から読み込み ---
+    function loadFromStorage() {
+      try {
+        var raw = localStorage.getItem("itskenpo_userdata");
+        if (!raw) return;
+        var d = JSON.parse(raw);
+
+        document.getElementById("sign_no").value = d.sign_no || "";
+        document.getElementById("insured_no").value = d.insured_no || "";
+        document.getElementById("office_name").value = d.office_name || "";
+        document.getElementById("kana_name").value = d.kana_name || "";
+
+        if (d.birth_year) document.getElementById("birth_year").value = d.birth_year;
+        if (d.birth_month) document.getElementById("birth_month").value = d.birth_month;
+        updateDaySelect();
+        if (d.birth_day) document.getElementById("birth_day").value = d.birth_day;
+
+        document.getElementById("gender").value = d.gender || "man";
+        document.getElementById("relationship").value = d.relationship || "myself";
+        document.getElementById("contact_phone").value = d.contact_phone || "";
+        document.getElementById("postal").value = d.postal || "";
+        document.getElementById("state").value = d.state || "";
+        document.getElementById("address").value = d.address || "";
+        document.getElementById("stay_persons").value = d.stay_persons || "";
+        document.getElementById("hope_rooms").value = d.hope_rooms || "1";
+      } catch (e) {
+        // ignore
+      }
+    }
+
+    // --- ブックマークレット生成 ---
+    function generateBookmarklet() {
+      var userData = {
+        sign_no: document.getElementById("sign_no").value,
+        insured_no: document.getElementById("insured_no").value,
+        office_name: document.getElementById("office_name").value,
+        kana_name: document.getElementById("kana_name").value,
+        birth_year: document.getElementById("birth_year").value,
+        birth_month: document.getElementById("birth_month").value,
+        birth_day: document.getElementById("birth_day").value,
+        gender: document.getElementById("gender").value,
+        relationship: document.getElementById("relationship").value,
+        contact_phone: document.getElementById("contact_phone").value,
+        postal: document.getElementById("postal").value,
+        state: document.getElementById("state").value,
+        address: document.getElementById("address").value,
+        stay_persons: document.getElementById("stay_persons").value,
+        hope_rooms: document.getElementById("hope_rooms").value
+      };
+
+      // content.js の fillForm ロジックをIIFEとして構築
+      var code = '(function(){'
+        + 'var d=' + JSON.stringify(userData) + ';'
+        + 'var f=document.querySelector("form.edit_apply");'
+        + 'if(!f){alert("フォームが見つかりません。ITS健保の申込ページで実行してください。");return;}'
+        + 'try{'
+        // 記号
+        + 'var e;'
+        + 'e=document.getElementById("apply_sign_no");if(e)e.value=d.sign_no||"";'
+        // 番号
+        + 'e=document.getElementById("apply_insured_no");if(e)e.value=d.insured_no||"";'
+        // 事業所名
+        + 'e=document.getElementById("apply_office_name");if(e)e.value=d.office_name||"";'
+        // カナ氏名
+        + 'e=document.getElementById("apply_kana_name");if(e)e.value=d.kana_name||"";'
+        // 生年月日 - 年
+        + 'e=document.getElementById("apply_year");if(e&&d.birth_year){e.value=d.birth_year;e.dispatchEvent(new Event("change"));}'
+        // 生年月日 - 月
+        + 'e=document.getElementById("apply_month");if(e&&d.birth_month){e.value=d.birth_month;e.dispatchEvent(new Event("change"));}'
+        // 生年月日 - 日（100ms待機）
+        + 'setTimeout(function(){'
+        + 'var e=document.getElementById("apply_day");if(e&&d.birth_day)e.value=d.birth_day;'
+        + '},100);'
+        // 性別
+        + 'e=document.getElementById("apply_gender");if(e)e.value=d.gender||"man";'
+        // 続柄
+        + 'e=document.getElementById("apply_relationship");if(e){e.value=d.relationship||"myself";e.dispatchEvent(new Event("change"));}'
+        // 連絡先電話番号
+        + 'e=document.getElementById("apply_contact_phone");if(e)e.value=d.contact_phone||"";'
+        // 郵便番号 + blur
+        + 'e=document.getElementById("apply_postal");if(e){e.value=d.postal||"";e.dispatchEvent(new Event("blur"));}'
+        // 500ms後: 都道府県、住所、宿泊人数、希望部屋数
+        + 'setTimeout(function(){'
+        + 'var e;'
+        + 'e=document.getElementById("apply_state");if(e)e.value=d.state||"";'
+        + 'e=document.getElementById("apply_address");if(e)e.value=d.address||"";'
+        + 'e=document.getElementById("apply_stay_persons");if(e&&d.stay_persons)e.value=d.stay_persons;'
+        + 'e=document.getElementById("house_select");if(e&&d.hope_rooms){e.value=d.hope_rooms;e.dispatchEvent(new Event("change"));'
+        + 'setTimeout(function(){'
+        + 'var e=document.getElementById("apply_hope_room1");if(e&&d.stay_persons)e.value=d.stay_persons;'
+        + '},200);'
+        + '}'
+        + 'alert("\\u2728 自動入力完了！\\n内容を確認してください。");'
+        + '},500);'
+        + '}catch(err){alert("エラー: "+err.message);}'
+        + 'void(0);'
+        + '})();';
+
+      var bookmarklet = 'javascript:' + encodeURIComponent(code);
+
+      document.getElementById("bookmarkletCode").value = bookmarklet;
+      document.getElementById("outputArea").classList.add("visible");
+      showStatus("copyStatus", "", "");
+    }
+
+    // --- コピー ---
+    function copyBookmarklet() {
+      var codeEl = document.getElementById("bookmarkletCode");
+      var text = codeEl.value;
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function() {
+          showStatus("copyStatus", "コピーしました！", "success");
+        }, function() {
+          fallbackCopy(codeEl);
+        });
+      } else {
+        fallbackCopy(codeEl);
+      }
+    }
+
+    function fallbackCopy(textareaEl) {
+      textareaEl.select();
+      textareaEl.setSelectionRange(0, textareaEl.value.length);
+      try {
+        document.execCommand("copy");
+        showStatus("copyStatus", "コピーしました！", "success");
+      } catch (e) {
+        showStatus("copyStatus", "コピーに失敗しました。手動で選択してコピーしてください。", "error");
+      }
+    }
+
+    // --- ステータス表示 ---
+    function showStatus(id, message, type) {
+      var el = document.getElementById(id);
+      el.textContent = message;
+      el.className = "status" + (type ? " " + type : "");
+      if (message) {
+        setTimeout(function() {
+          el.textContent = "";
+          el.className = "status";
+        }, 3000);
+      }
+    }
+  </script>
+</body>
+</html>
