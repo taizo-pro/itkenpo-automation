@@ -1,0 +1,10 @@
+# Documentation
+docs/
+
+# Agent instruction files
+CLAUDE.md
+AGENTS.md
+CODEX.md
+
+# macOS
+.DS_Store
