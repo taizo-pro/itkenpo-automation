@@ -3,385 +3,1242 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ITS健保フォーム自動入力 ブックマークレット生成</title>
+  <title>ITS健保カンタン入力 | 施設抽選フォーム自動入力ツール</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
   <style>
-    * {
+    *, *::before, *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background: linear-gradient(135deg, #e6f0ff 0%, #e0e7ff 100%);
-      padding: 16px;
-      color: #333;
-      min-height: 100vh;
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #FAFAF9;
+      color: #292524;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
     }
 
-    .container {
-      max-width: 480px;
-      margin: 0 auto;
-      background-color: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      overflow: hidden;
+    /* ===== Header ===== */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 80px;
+      height: 72px;
+      background: #FAFAF9;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s;
     }
 
-    .inner {
-      padding: 16px;
+    .header.scrolled {
+      border-bottom-color: #E7E5E4;
+      background: rgba(250, 250, 249, 0.95);
+      backdrop-filter: blur(8px);
     }
 
-    h1 {
-      font-size: 20px;
-      font-weight: bold;
-      text-align: center;
-      color: #4338ca;
-      margin-bottom: 4px;
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
     }
 
-    .subtitle {
-      font-size: 13px;
-      text-align: center;
-      color: #6b7280;
-      margin-bottom: 16px;
+    .logo-icon {
+      color: #EA580C;
     }
 
-    .form-group {
-      margin-bottom: 8px;
+    .logo-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 16px;
+      font-weight: 700;
+      color: #292524;
     }
 
-    label {
-      display: block;
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .nav-link {
       font-size: 14px;
       font-weight: 500;
-      color: #4b5563;
-      margin-bottom: 4px;
+      color: #78716C;
+      text-decoration: none;
+      transition: color 0.2s;
     }
 
-    input, select {
-      width: 100%;
-      padding: 8px 12px;
-      border: 1px solid #d1d5db;
-      border-radius: 6px;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-      font-size: 16px;
+    .nav-link:hover {
+      color: #292524;
     }
 
-    select {
-      -webkit-appearance: none;
-      appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7280' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 12px center;
-      padding-right: 32px;
+    .nav-cta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 20px;
+      background: #EA580C;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: 100px;
+      text-decoration: none;
+      transition: background 0.2s;
     }
 
-    input:focus, select:focus {
-      outline: none;
-      border-color: #4338ca;
-      box-shadow: 0 0 0 2px rgba(67, 56, 202, 0.3);
+    .nav-cta:hover {
+      background: #DC4F05;
     }
 
-    .date-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
+    /* ===== Hero ===== */
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 100px 80px 80px;
+      gap: 40px;
+    }
+
+    .hero-badge {
+      display: flex;
+      align-items: center;
       gap: 8px;
+      padding: 6px 16px;
+      background: rgba(234, 88, 12, 0.08);
+      border: 1px solid rgba(234, 88, 12, 0.19);
+      border-radius: 100px;
     }
 
-    .button {
-      width: 100%;
-      padding: 12px 16px;
-      background-color: #4338ca;
-      color: white;
-      font-weight: bold;
+    .hero-badge-icon {
+      color: #EA580C;
+    }
+
+    .hero-badge-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 600;
+      color: #EA580C;
+    }
+
+    .hero-text {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      max-width: 900px;
+    }
+
+    .hero-title {
+      font-size: 56px;
+      font-weight: 700;
+      line-height: 1.2;
+      text-align: center;
+    }
+
+    .hero-sub {
+      font-size: 18px;
+      font-weight: 400;
+      color: #78716C;
+      line-height: 1.6;
+      text-align: center;
+      max-width: 700px;
+    }
+
+    .hero-ctas {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 32px;
+      background: #EA580C;
+      color: #fff;
       font-size: 16px;
+      font-weight: 600;
       border: none;
-      border-radius: 6px;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      border-radius: 100px;
       cursor: pointer;
-      transition: all 0.3s;
-      -webkit-appearance: none;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.1s;
     }
 
-    .button:hover {
-      background-color: #3730a3;
+    .btn-primary:hover {
+      background: #DC4F05;
     }
 
-    .button:active {
+    .btn-primary:active {
       transform: scale(0.98);
     }
 
-    .button-save {
-      margin-bottom: 12px;
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 32px;
+      background: transparent;
+      color: #292524;
+      font-size: 16px;
+      font-weight: 600;
+      border: 1px solid #D6D3D1;
+      border-radius: 100px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color 0.2s;
     }
 
-    .button-generate {
-      background-color: #059669;
+    .btn-secondary:hover {
+      border-color: #A8A29E;
     }
 
-    .button-generate:hover {
-      background-color: #047857;
+    /* ===== Section common ===== */
+    .section-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      max-width: 600px;
     }
 
-    .button-copy {
-      background-color: #d97706;
-      margin-top: 8px;
-    }
-
-    .button-copy:hover {
-      background-color: #b45309;
-    }
-
-    .status {
-      text-align: center;
-      padding: 8px 0;
-      font-size: 14px;
-    }
-
-    .success {
-      color: #047857;
-    }
-
-    .error {
-      color: #dc2626;
-    }
-
-    .divider {
-      border: none;
-      border-top: 1px solid #e5e7eb;
-      margin: 16px 0;
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 700;
+      color: #EA580C;
+      letter-spacing: 2px;
     }
 
     .section-title {
+      font-size: 36px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .section-desc {
       font-size: 16px;
-      font-weight: bold;
-      color: #4338ca;
-      margin-bottom: 8px;
+      font-weight: 400;
+      color: #78716C;
+      text-align: center;
+    }
+
+    /* ===== How It Works ===== */
+    .how-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 48px;
+      padding: 80px;
+      background: #F1F1F1;
+    }
+
+    .steps {
+      display: flex;
+      gap: 24px;
+      width: 100%;
+    }
+
+    .step-card {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding: 32px;
+      background: #fff;
+      border: 1px solid #E7E5E4;
+      border-radius: 20px;
+    }
+
+    .step-num {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .step-num-1 { background: #EA580C; }
+    .step-num-2 { background: #292524; }
+    .step-num-3 { background: #292524; }
+
+    .step-title {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .step-desc {
+      font-size: 14px;
+      font-weight: 400;
+      color: #78716C;
+      line-height: 1.6;
+    }
+
+    /* ===== Form Section ===== */
+    .form-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 48px;
+      padding: 80px;
+    }
+
+    .form-card {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      width: 100%;
+      max-width: 720px;
+      padding: 48px;
+      background: #fff;
+      border: 1px solid #E7E5E4;
+      border-radius: 20px;
+    }
+
+    .form-group-section {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .form-group-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .form-group-title-icon {
+      color: #EA580C;
+    }
+
+    .form-group-title-text {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .form-group-divider {
+      height: 1px;
+      background: #E7E5E4;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 16px;
+      width: 100%;
+    }
+
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex: 1;
+    }
+
+    .form-field.w-200 {
+      flex: 0 0 200px;
+    }
+
+    .form-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: #292524;
+    }
+
+    .form-input,
+    .form-select {
+      width: 100%;
+      height: 40px;
+      padding: 8px 16px;
+      background: #FAFAF9;
+      border: 1px solid #E7E5E4;
+      border-radius: 100px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      color: #292524;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    .form-select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2378716C' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 36px;
+    }
+
+    .form-input:focus,
+    .form-select:focus {
+      border-color: #EA580C;
+      box-shadow: 0 0 0 2px rgba(234, 88, 12, 0.15);
+    }
+
+    .form-input::placeholder {
+      color: #A8A29E;
+    }
+
+    /* ===== Generate Section ===== */
+    .generate-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 48px;
+      padding: 80px;
+      background: #F1F1F1;
+    }
+
+    .generate-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+      width: 100%;
+      max-width: 720px;
+      padding: 48px;
+      background: #fff;
+      border: 1px solid #E7E5E4;
+      border-radius: 20px;
+    }
+
+    .btn-generate {
+      width: 100%;
+      padding: 16px 48px;
+      gap: 10px;
     }
 
     .output-area {
       display: none;
-      margin-top: 12px;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
     }
 
     .output-area.visible {
+      display: flex;
+    }
+
+    .output-label {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .output-box {
+      width: 100%;
+      height: 120px;
+      padding: 16px;
+      background: #292524;
+      border: none;
+      border-radius: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: #A8A29E;
+      line-height: 1.5;
+      resize: vertical;
+      outline: none;
+    }
+
+    .btn-copy {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: #292524;
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      border: none;
+      border-radius: 100px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-copy:hover {
+      background: #1C1917;
+    }
+
+    /* ===== Usage Guide ===== */
+    .guide-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 48px;
+      padding: 80px;
+    }
+
+    .guide-tabs {
+      display: flex;
+      padding: 4px;
+      background: #F1F1F1;
+      border-radius: 100px;
+    }
+
+    .guide-tab {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 24px;
+      border: none;
+      border-radius: 100px;
+      background: transparent;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      color: #78716C;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .guide-tab.active {
+      background: #fff;
+      color: #292524;
+      font-weight: 600;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .guide-tab svg {
+      transition: color 0.2s;
+    }
+
+    .guide-content {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      width: 100%;
+      max-width: 880px;
+    }
+
+    .guide-panel {
+      display: none;
+    }
+
+    .guide-panel.active {
       display: block;
     }
 
-    .bookmarklet-code {
-      width: 100%;
-      height: 80px;
-      padding: 8px;
-      border: 1px solid #d1d5db;
-      border-radius: 6px;
-      font-size: 12px;
-      font-family: monospace;
-      resize: vertical;
-      word-break: break-all;
+    .guide-card {
+      background: #fff;
+      border: 1px solid #E7E5E4;
+      border-radius: 20px;
+      overflow: hidden;
     }
 
-    .instructions {
-      margin-top: 16px;
-      padding: 12px;
-      background-color: #f9fafb;
-      border-radius: 8px;
-      border: 1px solid #e5e7eb;
-    }
-
-    .instructions h3 {
-      font-size: 14px;
-      font-weight: bold;
-      color: #4338ca;
-      margin-bottom: 8px;
-    }
-
-    .instructions ol {
-      padding-left: 20px;
-      font-size: 13px;
-      line-height: 1.8;
-      color: #4b5563;
-    }
-
-    .instructions li {
-      margin-bottom: 4px;
-    }
-
-    .privacy-notice {
+    .guide-card-header {
       display: flex;
-      align-items: flex-start;
-      gap: 8px;
-      padding: 10px 12px;
-      background-color: #f0fdf4;
-      border: 1px solid #bbf7d0;
-      border-radius: 8px;
-      margin-bottom: 16px;
-      font-size: 13px;
-      line-height: 1.6;
-      color: #166534;
-    }
-
-    .privacy-notice .icon {
-      flex-shrink: 0;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 24px;
+      background: #F1F1F1;
       font-size: 16px;
-      margin-top: 1px;
+      font-weight: 700;
     }
 
-    .privacy-notice strong {
-      color: #14532d;
+    .guide-card-header svg {
+      color: #292524;
+    }
+
+    .guide-card-divider {
+      height: 1px;
+      background: #E7E5E4;
+    }
+
+    .guide-step {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 20px 24px;
+    }
+
+    .guide-step:first-of-type {
+      background: rgba(234, 88, 12, 0.03);
+    }
+
+    .guide-step-num {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .guide-step-num-active {
+      background: #EA580C;
+      color: #fff;
+    }
+
+    .guide-step-num-default {
+      background: #F1F1F1;
+      color: #292524;
+    }
+
+    .guide-step-text {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .guide-step-title {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .guide-step-desc {
+      font-size: 13px;
+      color: #78716C;
+      line-height: 1.4;
+    }
+
+    .guide-step-divider {
+      height: 1px;
+      background: #E7E5E4;
+    }
+
+    /* ===== Footer ===== */
+    .footer {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+      padding: 60px 80px 40px;
+      background: #292524;
+    }
+
+    .footer-top {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .footer-brand {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      max-width: 400px;
+    }
+
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .footer-logo-icon {
+      color: #EA580C;
+    }
+
+    .footer-logo-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .footer-tagline {
+      font-size: 13px;
+      color: #A8A29E;
+      line-height: 1.6;
+    }
+
+    .footer-security {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .footer-security-icon {
+      color: #0D9488;
+    }
+
+    .footer-security-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      color: #0D9488;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 48px;
+    }
+
+    .footer-link-col {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .footer-link-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .footer-link {
+      font-size: 13px;
+      color: #A8A29E;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-link:hover {
+      color: #D6D3D1;
+    }
+
+    .footer-divider {
+      height: 1px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .footer-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-bottom-text {
+      font-size: 12px;
+      color: #78716C;
+    }
+
+    /* ===== Status ===== */
+    .status {
+      text-align: center;
+      padding: 8px 0;
+      font-size: 14px;
+      min-height: 38px;
+    }
+
+    .status.success { color: #047857; }
+    .status.error { color: #dc2626; }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 768px) {
+      .header {
+        padding: 0 20px;
+      }
+
+      .nav-link {
+        display: none;
+      }
+
+      .hero {
+        padding: 60px 20px;
+        gap: 32px;
+      }
+
+      .hero-title {
+        font-size: 32px;
+      }
+
+      .hero-sub {
+        font-size: 16px;
+      }
+
+      .hero-ctas {
+        flex-direction: column;
+        width: 100%;
+      }
+
+      .hero-ctas .btn-primary,
+      .hero-ctas .btn-secondary {
+        width: 100%;
+      }
+
+      .how-section,
+      .form-section,
+      .generate-section,
+      .guide-section {
+        padding: 48px 20px;
+      }
+
+      .steps {
+        flex-direction: column;
+      }
+
+      .section-title {
+        font-size: 28px;
+      }
+
+      .form-card,
+      .generate-card {
+        padding: 24px;
+      }
+
+      .form-row {
+        flex-direction: column;
+      }
+
+      .form-field.w-200 {
+        flex: 1;
+      }
+
+      .guide-tabs {
+        width: 100%;
+      }
+
+      .guide-tab {
+        flex: 1;
+        padding: 10px 12px;
+        font-size: 13px;
+      }
+
+      .guide-content {
+        padding: 0;
+      }
+
+      .footer {
+        padding: 40px 20px 24px;
+      }
+
+      .footer-top {
+        flex-direction: column;
+        gap: 32px;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        gap: 8px;
+        text-align: center;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="inner">
-      <h1>ITS健保フォーム自動入力</h1>
-      <p class="subtitle">ブックマークレット生成ツール</p>
 
-      <div class="privacy-notice">
-        <span class="icon">🔒</span>
-        <span>
-          <strong>あなたのデータは安全です</strong><br>
-          入力された情報はすべてお使いのブラウザ内でのみ処理されます。外部サーバーへの送信は一切行いません。ソースコードは<a href="https://github.com/taizo-pro/itkenpo-automation" target="_blank" rel="noopener">GitHub</a>で公開しています。
-        </span>
+  <!-- Header -->
+  <header class="header" id="header">
+    <a href="#" class="logo">
+      <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg>
+      <span class="logo-text">ITS健保カンタン入力</span>
+    </a>
+    <nav class="nav">
+      <a href="#how" class="nav-link">使い方</a>
+      <a href="#security" class="nav-link">セキュリティ</a>
+      <a href="#form" class="nav-cta">今すぐ使う</a>
+    </nav>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-badge">
+      <svg class="hero-badge-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+      <span class="hero-badge-text">データはブラウザ内で完結・サーバー送信なし</span>
+    </div>
+    <div class="hero-text">
+      <h1 class="hero-title">毎月の施設抽選申込、<br>ワンタップで完了。</h1>
+      <p class="hero-sub">ITS健保の施設抽選申込フォームに、保存した個人情報をブックマークレットで自動入力。面倒な毎月の入力作業から解放されます。</p>
+    </div>
+    <div class="hero-ctas">
+      <a href="#form" class="btn-primary">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>
+        フォームを入力する
+      </a>
+      <a href="#how" class="btn-secondary">使い方を見る</a>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="how-section" id="how">
+    <div class="section-header">
+      <span class="section-label">HOW IT WORKS</span>
+      <h2 class="section-title">3ステップでカンタン</h2>
+      <p class="section-desc">一度情報を入力するだけ。あとは毎月ワンタップ。</p>
+    </div>
+    <div class="steps">
+      <div class="step-card">
+        <div class="step-num step-num-1">1</div>
+        <div class="step-title">フォームに入力</div>
+        <div class="step-desc">このページで個人情報を入力します。データはブラウザ内に保存され、外部に送信されません。</div>
       </div>
-
-      <div class="form-group">
-        <label for="sign_no">記号</label>
-        <input type="text" id="sign_no" placeholder="例: 1234" inputmode="numeric">
+      <div class="step-card">
+        <div class="step-num step-num-2">2</div>
+        <div class="step-title">ブックマークレット生成</div>
+        <div class="step-desc">「生成」ボタンを押すと、入力した情報を含むJavaScriptコードが生成されます。これをブラウザのブックマークに登録します。</div>
       </div>
-
-      <div class="form-group">
-        <label for="insured_no">番号</label>
-        <input type="text" id="insured_no" placeholder="例: 5678" inputmode="numeric">
+      <div class="step-card">
+        <div class="step-num step-num-3">3</div>
+        <div class="step-title">ワンタップで自動入力</div>
+        <div class="step-desc">ITS健保の申込ページで登録したブックマークをタップするだけ。フォームが自動で埋まります。</div>
       </div>
+    </div>
+  </section>
 
-      <div class="form-group">
-        <label for="office_name">事業所名</label>
-        <input type="text" id="office_name" placeholder="例: 株式会社〇〇">
-      </div>
-
-      <div class="form-group">
-        <label for="kana_name">申込代表者名（カナ氏名）</label>
-        <input type="text" id="kana_name" placeholder="例: ヤマダ タロウ">
-      </div>
-
-      <div class="form-group">
-        <label>生年月日</label>
-        <div class="date-grid">
-          <select id="birth_year"></select>
-          <select id="birth_month"></select>
-          <select id="birth_day"></select>
+  <!-- Form Section -->
+  <section class="form-section" id="form">
+    <div class="section-header" id="security">
+      <span class="section-label">FORM</span>
+      <h2 class="section-title">個人情報を入力</h2>
+      <p class="section-desc">入力した情報はブラウザ内にのみ保存されます</p>
+    </div>
+    <div class="form-card">
+      <!-- 保険証情報 -->
+      <div class="form-group-section">
+        <div class="form-group-title">
+          <svg class="form-group-title-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+          <span class="form-group-title-text">保険証情報</span>
+        </div>
+        <div class="form-group-divider"></div>
+        <div class="form-row">
+          <div class="form-field">
+            <label class="form-label" for="sign_no">記号</label>
+            <input class="form-input" type="text" id="sign_no" placeholder="例: 1234" inputmode="numeric">
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="insured_no">番号</label>
+            <input class="form-input" type="text" id="insured_no" placeholder="例: 5678" inputmode="numeric">
+          </div>
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="office_name">事業所名</label>
+          <input class="form-input" type="text" id="office_name" placeholder="例: 株式会社○○">
         </div>
       </div>
 
-      <div class="form-group">
-        <label for="gender">性別</label>
-        <select id="gender">
-          <option value="man">男性</option>
-          <option value="woman">女性</option>
-        </select>
+      <!-- 個人情報 -->
+      <div class="form-group-section">
+        <div class="form-group-title">
+          <svg class="form-group-title-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span class="form-group-title-text">個人情報</span>
+        </div>
+        <div class="form-group-divider"></div>
+        <div class="form-field">
+          <label class="form-label" for="kana_name">申込代表者名（カナ氏名）</label>
+          <input class="form-input" type="text" id="kana_name" placeholder="例: ヤマダ タロウ">
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label class="form-label" for="birth_year">年</label>
+            <select class="form-select" id="birth_year"></select>
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="birth_month">月</label>
+            <select class="form-select" id="birth_month"></select>
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="birth_day">日</label>
+            <select class="form-select" id="birth_day"></select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label class="form-label" for="gender">性別</label>
+            <select class="form-select" id="gender">
+              <option value="man">男性</option>
+              <option value="woman">女性</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="relationship">続柄</label>
+            <select class="form-select" id="relationship">
+              <option value="myself">本人（被保険者）</option>
+              <option value="family">家族（被扶養者）</option>
+            </select>
+          </div>
+        </div>
       </div>
 
-      <div class="form-group">
-        <label for="relationship">続柄</label>
-        <select id="relationship">
-          <option value="myself">本人（被保険者）</option>
-          <option value="family">家族（被扶養者）</option>
-        </select>
+      <!-- 連絡先・住所 -->
+      <div class="form-group-section">
+        <div class="form-group-title">
+          <svg class="form-group-title-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          <span class="form-group-title-text">連絡先・住所</span>
+        </div>
+        <div class="form-group-divider"></div>
+        <div class="form-field">
+          <label class="form-label" for="contact_phone">電話番号</label>
+          <input class="form-input" type="text" id="contact_phone" placeholder="例: 03-1234-5678" inputmode="tel">
+        </div>
+        <div class="form-row">
+          <div class="form-field w-200">
+            <label class="form-label" for="postal">郵便番号</label>
+            <input class="form-input" type="text" id="postal" placeholder="例: 1698516" inputmode="numeric">
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="state">都道府県</label>
+            <select class="form-select" id="state"></select>
+          </div>
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="address">住所</label>
+          <input class="form-input" type="text" id="address" placeholder="例: 千代田区千代田1-1">
+        </div>
       </div>
 
-      <div class="form-group">
-        <label for="contact_phone">連絡先電話番号</label>
-        <input type="text" id="contact_phone" placeholder="例: 09012345678" inputmode="tel">
+      <!-- 宿泊情報 -->
+      <div class="form-group-section">
+        <div class="form-group-title">
+          <svg class="form-group-title-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20v-8a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v8"/><path d="M4 10V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v4"/><path d="M12 4v6"/><path d="M2 18h20"/></svg>
+          <span class="form-group-title-text">宿泊情報</span>
+        </div>
+        <div class="form-group-divider"></div>
+        <div class="form-row">
+          <div class="form-field">
+            <label class="form-label" for="stay_persons">宿泊人数</label>
+            <select class="form-select" id="stay_persons">
+              <option value="">選択してください</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="hope_rooms">希望部屋数</label>
+            <select class="form-select" id="hope_rooms">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+            </select>
+          </div>
+        </div>
       </div>
 
-      <div class="form-group">
-        <label for="postal">郵便番号</label>
-        <input type="text" id="postal" placeholder="例: 1698516" inputmode="numeric">
-      </div>
-
-      <div class="form-group">
-        <label for="state">都道府県</label>
-        <select id="state"></select>
-      </div>
-
-      <div class="form-group">
-        <label for="address">住所</label>
-        <input type="text" id="address" placeholder="例: 新宿区百人町2-27-6">
-      </div>
-
-      <div class="form-group">
-        <label for="stay_persons">宿泊人数</label>
-        <input type="number" id="stay_persons" min="1" placeholder="例: 2" inputmode="numeric">
-      </div>
-
-      <div class="form-group">
-        <label for="hope_rooms">希望部屋数</label>
-        <select id="hope_rooms">
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="6">6</option>
-          <option value="7">7</option>
-          <option value="8">8</option>
-          <option value="9">9</option>
-          <option value="10">10</option>
-        </select>
-      </div>
-
-      <button id="saveButton" class="button button-save">設定を保存</button>
+      <button id="saveButton" class="btn-primary" style="width:100%;">設定を保存</button>
       <div id="saveStatus" class="status"></div>
+    </div>
+  </section>
 
-      <hr class="divider">
-
-      <p class="section-title">ブックマークレット生成</p>
-      <button id="generateButton" class="button button-generate">ブックマークレットを生成</button>
-
+  <!-- Generate Section -->
+  <section class="generate-section" id="generate">
+    <div class="section-header">
+      <span class="section-label">GENERATE</span>
+      <h2 class="section-title">ブックマークレットを生成</h2>
+      <p class="section-desc">フォーム入力後、下のボタンでコードを生成してください</p>
+    </div>
+    <div class="generate-card">
+      <button id="generateButton" class="btn-primary btn-generate">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/></svg>
+        ブックマークレットを生成する
+      </button>
       <div id="outputArea" class="output-area">
-        <textarea id="bookmarkletCode" class="bookmarklet-code" readonly></textarea>
-        <button id="copyButton" class="button button-copy">コピー</button>
+        <div class="output-label">生成されたコード</div>
+        <textarea id="bookmarkletCode" class="output-box" readonly></textarea>
+        <button id="copyButton" class="btn-copy">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+          コードをコピー
+        </button>
         <div id="copyStatus" class="status"></div>
+      </div>
+    </div>
+  </section>
 
-        <div class="instructions">
-          <h3>PC（Chrome / Edge / Firefox）での保存手順</h3>
-          <ol>
-            <li>上の「コピー」ボタンをクリック</li>
-            <li>ブックマークバーを右クリック →「ページを追加」</li>
-            <li>名前を「ITS健保自動入力」に変更</li>
-            <li>URL欄にコピーしたコードを貼り付けて保存</li>
-            <li>ITS健保の申込フォームページを開き、ブックマークをクリック!</li>
-          </ol>
+  <!-- Usage Guide -->
+  <section class="guide-section" id="guide">
+    <div class="section-header">
+      <span class="section-label">SETUP GUIDE</span>
+      <h2 class="section-title">ブックマークの登録手順</h2>
+      <p class="section-desc">お使いのデバイスに合わせた手順をご確認ください</p>
+    </div>
+    <div class="guide-tabs">
+      <button class="guide-tab active" data-tab="pc">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg>
+        PC
+      </button>
+      <button class="guide-tab" data-tab="iphone">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
+        iPhone
+      </button>
+      <button class="guide-tab" data-tab="android">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
+        Android
+      </button>
+    </div>
+    <div class="guide-content">
+      <!-- PC -->
+      <div class="guide-panel active" id="panel-pc">
+        <div class="guide-card">
+          <div class="guide-card-header">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg>
+            PC / Chrome
+          </div>
+          <div class="guide-card-divider"></div>
+          <div class="guide-step">
+            <div class="guide-step-num guide-step-num-active">1</div>
+            <div class="guide-step-text">
+              <div class="guide-step-title">コードをコピー</div>
+              <div class="guide-step-desc">「コードをコピー」ボタンをクリック</div>
+            </div>
+          </div>
+          <div class="guide-step-divider"></div>
+          <div class="guide-step">
+            <div class="guide-step-num guide-step-num-default">2</div>
+            <div class="guide-step-text">
+              <div class="guide-step-title">ブックマークバーを右クリック</div>
+              <div class="guide-step-desc">「ページを追加」を選択</div>
+            </div>
+          </div>
+          <div class="guide-step-divider"></div>
+          <div class="guide-step">
+            <div class="guide-step-num guide-step-num-default">3</div>
+            <div class="guide-step-text">
+              <div class="guide-step-title">URL欄にコードを貼り付け</div>
+              <div class="guide-step-desc">名前は「ITS健保自動入力」などお好みで</div>
+            </div>
+          </div>
+          <div class="guide-step-divider"></div>
+          <div class="guide-step">
+            <div class="guide-step-num guide-step-num-default">4</div>
+            <div class="guide-step-text">
+              <div class="guide-step-title">申込ページでブックマークをクリック</div>
+              <div class="guide-step-desc">ITS健保の施設抽選申込ページを開き、ブックマークバーから実行</div>
+            </div>
+          </div>
         </div>
-
-        <div class="instructions">
-          <h3>iPhone（Safari）での保存手順</h3>
-          <ol>
-            <li>上の「コピー」ボタンをタップ</li>
-            <li>Safariで適当なページをブックマーク</li>
-            <li>ブックマーク一覧を開き、保存したブックマークを「編集」</li>
-            <li>URL欄を全選択して削除し、コピーしたコードを貼り付け</li>
-            <li>名前を「ITS健保自動入力」などに変更して保存</li>
-            <li>ITS健保の申込フォームページでブックマークをタップ!</li>
-          </ol>
+      </div>
+      <!-- iPhone -->
+      <div class="guide-panel" id="panel-iphone">
+        <div class="guide-card">
+          <div class="guide-card-header">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
+            iPhone / Safari
+          </div>
+          <div class="guide-card-divider"></div>
+          <div class="guide-step">
+            <div class="guide-step-num guide-step-num-active">1</div>
+            <div class="guide-step-text">
+              <div class="guide-step-title">コードをコピー</div>
+              <div class="guide-step-desc">上のコピーボタンをタップ</div>
+            </div>
+          </div>
+          <div class="guide-step-divider"></div>
+          <div class="guide-step">
+            <div class="guide-step-num guide-step-num-default">2</div>
+            <div class="guide-step-text">
+              <div class="guide-step-title">ブックマークに追加</div>
+              <div class="guide-step-desc">任意のページをブックマーク</div>
+            </div>
+          </div>
+          <div class="guide-step-divider"></div>
+          <div class="guide-step">
+            <div class="guide-step-num guide-step-num-default">3</div>
+            <div class="guide-step-text">
+              <div class="guide-step-title">ブックマークを編集</div>
+              <div class="guide-step-desc">URLをコピーしたコードに書き換え</div>
+            </div>
+          </div>
+          <div class="guide-step-divider"></div>
+          <div class="guide-step">
+            <div class="guide-step-num guide-step-num-default">4</div>
+            <div class="guide-step-text">
+              <div class="guide-step-title">申込ページでブックマークを実行</div>
+              <div class="guide-step-desc">ブックマーク一覧から登録したブックマークをタップ</div>
+            </div>
+          </div>
         </div>
-
-        <div class="instructions">
-          <h3>Android（Chrome）での保存手順</h3>
-          <ol>
-            <li>上の「コピー」ボタンをタップ</li>
-            <li>Chromeで適当なページをブックマーク</li>
-            <li>ブックマーク一覧を開き、保存したブックマークの「︙」→「編集」</li>
-            <li>URL欄を全選択して削除し、コピーしたコードを貼り付け</li>
-            <li>名前を「ITS健保自動入力」に変更して保存</li>
-            <li>ITS健保の申込フォームページでアドレスバーに「ITS」と入力し、候補に表示されたブックマークをタップ!</li>
-          </ol>
+      </div>
+      <!-- Android -->
+      <div class="guide-panel" id="panel-android">
+        <div class="guide-card">
+          <div class="guide-card-header">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
+            Android / Chrome
+          </div>
+          <div class="guide-card-divider"></div>
+          <div class="guide-step">
+            <div class="guide-step-num guide-step-num-active">1</div>
+            <div class="guide-step-text">
+              <div class="guide-step-title">コードをコピー</div>
+              <div class="guide-step-desc">上のコピーボタンをタップ</div>
+            </div>
+          </div>
+          <div class="guide-step-divider"></div>
+          <div class="guide-step">
+            <div class="guide-step-num guide-step-num-default">2</div>
+            <div class="guide-step-text">
+              <div class="guide-step-title">Chromeで新しいブックマーク追加</div>
+              <div class="guide-step-desc">メニュー → ブックマーク → 追加</div>
+            </div>
+          </div>
+          <div class="guide-step-divider"></div>
+          <div class="guide-step">
+            <div class="guide-step-num guide-step-num-default">3</div>
+            <div class="guide-step-text">
+              <div class="guide-step-title">URL欄にコードを貼り付け</div>
+              <div class="guide-step-desc">ブックマークを編集してURLをコードに変更</div>
+            </div>
+          </div>
+          <div class="guide-step-divider"></div>
+          <div class="guide-step">
+            <div class="guide-step-num guide-step-num-default">4</div>
+            <div class="guide-step-text">
+              <div class="guide-step-title">申込ページでブックマークを実行</div>
+              <div class="guide-step-desc">アドレスバーにブックマーク名を入力して選択</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <svg class="footer-logo-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg>
+          <span class="footer-logo-text">ITS健保カンタン入力</span>
+        </div>
+        <p class="footer-tagline">ITS健保の施設抽選申込フォームに、ワンタップで個人情報を自動入力するブックマークレットツールです。</p>
+        <div class="footer-security">
+          <svg class="footer-security-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <span class="footer-security-text">すべてのデータはブラウザ内で処理されます</span>
+        </div>
+      </div>
+      <div class="footer-links">
+        <div class="footer-link-col">
+          <span class="footer-link-title">ツール</span>
+          <a href="#form" class="footer-link">フォーム入力</a>
+          <a href="#generate" class="footer-link">ブックマークレット生成</a>
+        </div>
+        <div class="footer-link-col">
+          <span class="footer-link-title">ガイド</span>
+          <a href="#guide" class="footer-link">PC での使い方</a>
+          <a href="#guide" class="footer-link">iPhone での使い方</a>
+          <a href="#guide" class="footer-link">Android での使い方</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <span class="footer-bottom-text">&copy; 2026 ITS健保カンタン入力. 非公式ツールです。</span>
+      <span class="footer-bottom-text">※ 関東ITソフトウェア健康保険組合とは無関係です</span>
+    </div>
+  </footer>
 
   <script>
     // --- 初期化 ---
@@ -393,6 +1250,30 @@
       document.getElementById("saveButton").addEventListener("click", saveToStorage);
       document.getElementById("generateButton").addEventListener("click", generateBookmarklet);
       document.getElementById("copyButton").addEventListener("click", copyBookmarklet);
+
+      // ヘッダースクロール効果
+      window.addEventListener("scroll", function() {
+        document.getElementById("header").classList.toggle("scrolled", window.scrollY > 10);
+      });
+
+      // タブ切り替え
+      document.querySelectorAll(".guide-tab").forEach(function(tab) {
+        tab.addEventListener("click", function() {
+          document.querySelectorAll(".guide-tab").forEach(function(t) { t.classList.remove("active"); });
+          document.querySelectorAll(".guide-panel").forEach(function(p) { p.classList.remove("active"); });
+          tab.classList.add("active");
+          document.getElementById("panel-" + tab.dataset.tab).classList.add("active");
+        });
+      });
+
+      // スムーズスクロール
+      document.querySelectorAll('a[href^="#"]').forEach(function(a) {
+        a.addEventListener("click", function(e) {
+          e.preventDefault();
+          var target = document.querySelector(this.getAttribute("href"));
+          if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+      });
     });
 
     // --- 生年月日セレクト初期化 ---
@@ -426,7 +1307,6 @@
       }
 
       updateDaySelect();
-
       yearSelect.addEventListener("change", updateDaySelect);
       monthSelect.addEventListener("change", updateDaySelect);
     }
@@ -568,38 +1448,25 @@
         hope_rooms: document.getElementById("hope_rooms").value
       };
 
-      // content.js の fillForm ロジックをIIFEとして構築
       var code = '(function(){'
         + 'var d=' + JSON.stringify(userData) + ';'
         + 'var f=document.querySelector("form.edit_apply");'
         + 'if(!f){alert("フォームが見つかりません。ITS健保の申込ページで実行してください。");return;}'
         + 'try{'
-        // 記号
         + 'var e;'
         + 'e=document.getElementById("apply_sign_no");if(e)e.value=d.sign_no||"";'
-        // 番号
         + 'e=document.getElementById("apply_insured_no");if(e)e.value=d.insured_no||"";'
-        // 事業所名
         + 'e=document.getElementById("apply_office_name");if(e)e.value=d.office_name||"";'
-        // カナ氏名
         + 'e=document.getElementById("apply_kana_name");if(e)e.value=d.kana_name||"";'
-        // 生年月日 - 年
         + 'e=document.getElementById("apply_year");if(e&&d.birth_year){e.value=d.birth_year;e.dispatchEvent(new Event("change"));}'
-        // 生年月日 - 月
         + 'e=document.getElementById("apply_month");if(e&&d.birth_month){e.value=d.birth_month;e.dispatchEvent(new Event("change"));}'
-        // 生年月日 - 日（100ms待機）
         + 'setTimeout(function(){'
         + 'var e=document.getElementById("apply_day");if(e&&d.birth_day)e.value=d.birth_day;'
         + '},100);'
-        // 性別
         + 'e=document.getElementById("apply_gender");if(e)e.value=d.gender||"man";'
-        // 続柄
         + 'e=document.getElementById("apply_relationship");if(e){e.value=d.relationship||"myself";e.dispatchEvent(new Event("change"));}'
-        // 連絡先電話番号
         + 'e=document.getElementById("apply_contact_phone");if(e)e.value=d.contact_phone||"";'
-        // 郵便番号 + blur
         + 'e=document.getElementById("apply_postal");if(e){e.value=d.postal||"";e.dispatchEvent(new Event("blur"));}'
-        // 500ms後: 都道府県、住所、宿泊人数、希望部屋数
         + 'setTimeout(function(){'
         + 'var e;'
         + 'e=document.getElementById("apply_state");if(e)e.value=d.state||"";'
@@ -621,6 +1488,9 @@
       document.getElementById("bookmarkletCode").value = bookmarklet;
       document.getElementById("outputArea").classList.add("visible");
       showStatus("copyStatus", "", "");
+
+      // 出力エリアにスクロール
+      document.getElementById("outputArea").scrollIntoView({ behavior: "smooth", block: "center" });
     }
 
     // --- コピー ---
