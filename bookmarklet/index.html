@@ -475,7 +475,7 @@
       background: #1C1917;
     }
 
-    /* ===== Usage Guide ===== */
+    /* ===== Usage Guide (Visual Steps) ===== */
     .guide-section {
       display: flex;
       flex-direction: column;
@@ -522,99 +522,679 @@
     .guide-content {
       display: flex;
       flex-direction: column;
-      gap: 24px;
+      gap: 64px;
       width: 100%;
-      max-width: 880px;
+      padding: 0 40px;
     }
 
     .guide-panel {
       display: none;
+      flex-direction: column;
+      gap: 48px;
     }
 
     .guide-panel.active {
-      display: block;
-    }
-
-    .guide-card {
-      background: #fff;
-      border: 1px solid #E7E5E4;
-      border-radius: 20px;
-      overflow: hidden;
-    }
-
-    .guide-card-header {
       display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 16px 24px;
-      background: #F1F1F1;
-      font-size: 16px;
-      font-weight: 700;
     }
 
-    .guide-card-header svg {
-      color: #292524;
-    }
-
-    .guide-card-divider {
-      height: 1px;
-      background: #E7E5E4;
-    }
-
-    .guide-step {
+    /* Visual Step Row */
+    .vstep-row {
       display: flex;
+      gap: 48px;
       align-items: center;
-      gap: 16px;
-      padding: 20px 24px;
+      width: 100%;
     }
 
-    .guide-step:first-of-type {
-      background: rgba(234, 88, 12, 0.03);
+    .vstep-row.reverse {
+      flex-direction: row-reverse;
     }
 
-    .guide-step-num {
+    .vstep-info {
+      width: 280px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .vstep-badge {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 32px;
-      height: 32px;
-      border-radius: 10px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 22px;
       font-weight: 700;
-      flex-shrink: 0;
-    }
-
-    .guide-step-num-active {
-      background: #EA580C;
       color: #fff;
     }
 
-    .guide-step-num-default {
-      background: #F1F1F1;
+    .vstep-badge.primary { background: #EA580C; }
+    .vstep-badge.dark { background: #292524; }
+
+    .vstep-title {
+      font-size: 20px;
+      font-weight: 700;
       color: #292524;
+      text-align: center;
     }
 
-    .guide-step-text {
+    .vstep-desc {
+      font-size: 14px;
+      color: #78716C;
+      line-height: 1.6;
+      text-align: center;
+    }
+
+    /* Mockup Container */
+    .vstep-mockup {
+      flex: 1;
       display: flex;
-      flex-direction: column;
-      gap: 4px;
+      justify-content: center;
+      padding: 24px;
     }
 
-    .guide-step-title {
-      font-size: 15px;
+    /* ---- PC Chrome Mockup ---- */
+    .chrome-mock {
+      width: 100%;
+      border-radius: 16px;
+      background: #fff;
+      border: 1px solid #E7E5E4;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+    }
+
+    .chrome-titlebar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      height: 36px;
+      padding: 0 12px;
+      background: #F5F5F4;
+    }
+
+    .chrome-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .chrome-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .chrome-dot.red { background: #EF4444; }
+    .chrome-dot.yellow { background: #F59E0B; }
+    .chrome-dot.green { background: #22C55E; }
+
+    .chrome-addr {
+      flex: 1;
+      height: 24px;
+      border-radius: 6px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: #78716C;
+    }
+
+    .chrome-bbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      height: 28px;
+      padding: 0 12px;
+      background: #F5F5F4;
+    }
+
+    .chrome-bm-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 9px;
       font-weight: 600;
     }
 
-    .guide-step-desc {
-      font-size: 13px;
-      color: #78716C;
-      line-height: 1.4;
+    .chrome-bm-item.highlight {
+      background: rgba(234,88,12,0.08);
+      border: 1px solid #EA580C;
+      color: #EA580C;
     }
 
-    .guide-step-divider {
+    .chrome-bm-item.normal {
+      color: #78716C;
+    }
+
+    .chrome-body {
+      padding: 16px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* Code box inside mockup */
+    .mock-code-box {
+      background: #292524;
+      border-radius: 8px;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .mock-code-line {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 7px;
+    }
+
+    .mock-code-line.dim { color: #A8A29E; }
+    .mock-code-line.accent { color: #EA580C; font-weight: 500; }
+
+    /* Generic small button inside mockup */
+    .mock-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      height: 32px;
+      border-radius: 100px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      width: 100%;
+    }
+
+    .mock-btn.orange { background: #EA580C; color: #fff; }
+    .mock-btn.dark {
+      background: #292524;
+      color: #fff;
+      border: 2px solid #EA580C;
+      box-shadow: 0 0 8px rgba(234,88,12,0.2);
+    }
+
+    /* Hint text */
+    .mock-hint {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #EA580C;
+    }
+
+    /* Section label inside mockup */
+    .mock-section-label {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 700;
+      color: #EA580C;
+      letter-spacing: 1px;
+    }
+
+    /* Form fields inside mockups */
+    .mock-form-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #292524;
+    }
+
+    .mock-form-fields {
+      display: flex;
+      gap: 12px;
+    }
+
+    .mock-form-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .mock-field {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .mock-field-label {
+      font-size: 9px;
+      color: #78716C;
+    }
+
+    .mock-field-input {
+      height: 20px;
+      border-radius: 4px;
+      background: #F5F5F4;
+      border: 1px solid #D1D5DB;
+    }
+
+    .mock-field-input.filled {
+      background: #FFF7ED;
+      border-color: #EA580C;
+      padding: 0 8px;
+      display: flex;
+      align-items: center;
+      font-size: 9px;
+      font-weight: 500;
+      color: #EA580C;
+    }
+
+    /* Toast / success bar */
+    .mock-toast {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px 16px;
+      background: #ECFDF5;
+      font-size: 12px;
+      font-weight: 600;
+      color: #059669;
+    }
+
+    .mock-click-hint {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px;
+      font-weight: 600;
+      color: #EA580C;
+    }
+
+    /* Context menu text */
+    .chrome-ctx {
+      padding: 12px 24px;
+      font-size: 11px;
+      color: #78716C;
+      line-height: 1.5;
+    }
+
+    /* ---- iPhone Mockup ---- */
+    .iphone-mock {
+      width: 220px;
+      padding: 6px;
+      background: #000;
+      border-radius: 28px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    }
+
+    .iphone-screen {
+      width: 100%;
+      border-radius: 22px;
+      overflow: hidden;
+    }
+
+    .iphone-screen.white { background: #fff; }
+    .iphone-screen.gray { background: #F2F2F7; }
+
+    .phone-statusbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      height: 24px;
+      font-size: 10px;
+      font-weight: 600;
+      color: #292524;
+    }
+
+    .phone-statusbar-icons {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+    }
+
+    /* Safari specific */
+    .safari-addr {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 26px;
+      padding: 0 12px;
+      background: #F5F5F4;
+      font-size: 9px;
+      color: #78716C;
+    }
+
+    .safari-share-sheet {
+      border-radius: 14px 14px 0 0;
+      background: #fff;
+      padding-top: 12px;
+    }
+
+    .share-handle {
+      display: flex;
+      justify-content: center;
+      padding-bottom: 8px;
+    }
+
+    .share-handle-bar {
+      width: 28px;
+      height: 3px;
+      border-radius: 2px;
+      background: #D1D5DB;
+    }
+
+    .share-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      font-size: 12px;
+      color: #292524;
+    }
+
+    .share-item.highlight {
+      background: rgba(0,122,255,0.03);
+      color: #007AFF;
+      font-weight: 600;
+    }
+
+    .share-divider {
       height: 1px;
-      background: #E7E5E4;
+      background: #E5E7EB;
+    }
+
+    /* Safari edit screen */
+    .safari-edit-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 36px;
+      padding: 0 12px;
+      background: #fff;
+      font-size: 11px;
+    }
+
+    .safari-edit-nav .cancel { color: #007AFF; }
+    .safari-edit-nav .title { font-weight: 600; color: #292524; }
+    .safari-edit-nav .done { font-weight: 600; color: #007AFF; }
+
+    .edit-form {
+      background: #fff;
+      padding: 12px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .edit-field {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .edit-field-label {
+      font-size: 9px;
+      color: #78716C;
+    }
+
+    .edit-field-input {
+      height: 28px;
+      border-radius: 6px;
+      background: #F5F5F4;
+      padding: 0 10px;
+      display: flex;
+      align-items: center;
+      font-size: 10px;
+      color: #292524;
+    }
+
+    .edit-field-input.code {
+      border: 2px solid #EA580C;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px;
+      font-weight: 500;
+      color: #EA580C;
+    }
+
+    /* Phone form fields */
+    .phone-form-body {
+      padding: 8px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .phone-form-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: #292524;
+    }
+
+    .phone-field {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .phone-field-label {
+      font-size: 8px;
+      color: #78716C;
+    }
+
+    .phone-field-input {
+      height: 18px;
+      border-radius: 3px;
+      background: #FFF7ED;
+      border: 1px solid #EA580C;
+      padding: 0 6px;
+      display: flex;
+      align-items: center;
+      font-size: 8px;
+      font-weight: 500;
+      color: #EA580C;
+    }
+
+    .phone-toast {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      padding: 8px 12px;
+      background: #ECFDF5;
+      font-size: 10px;
+      font-weight: 600;
+      color: #059669;
+    }
+
+    .phone-body-content {
+      padding: 6px 12px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .phone-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      height: 28px;
+      border-radius: 100px;
+      font-size: 10px;
+      font-weight: 600;
+      width: 100%;
+    }
+
+    .phone-btn.orange { background: #EA580C; color: #fff; }
+    .phone-btn.dark {
+      background: #292524;
+      color: #fff;
+      border: 2px solid #EA580C;
+      box-shadow: 0 0 6px rgba(234,88,12,0.2);
+    }
+
+    .phone-code-box {
+      background: #292524;
+      border-radius: 6px;
+      padding: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .phone-code-line {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 6px;
+    }
+
+    .phone-code-line.dim { color: #A8A29E; }
+    .phone-code-line.accent { color: #EA580C; font-weight: 500; }
+
+    .phone-hint {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      font-size: 9px;
+      font-weight: 600;
+      color: #EA580C;
+    }
+
+    .phone-page-area {
+      height: 40px;
+      background: #fff;
+    }
+
+    /* ---- Android Mockup ---- */
+    .android-mock {
+      width: 220px;
+      padding: 6px;
+      background: #1A1A1A;
+      border-radius: 24px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    }
+
+    .android-screen {
+      width: 100%;
+      border-radius: 18px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .android-statusbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      height: 22px;
+      background: #F5F5F5;
+      font-size: 9px;
+      font-weight: 600;
+      color: #292524;
+    }
+
+    .android-chrome-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      background: #F5F5F5;
+    }
+
+    .android-url-pill {
+      flex: 1;
+      height: 24px;
+      border-radius: 12px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 8px;
+      font-size: 9px;
+      color: #78716C;
+    }
+
+    .android-url-pill.typing {
+      height: 28px;
+      border-radius: 14px;
+      border: 2px solid #4285F4;
+      font-size: 10px;
+      font-weight: 500;
+      color: #292524;
+      justify-content: flex-start;
+    }
+
+    .android-bm-popup {
+      padding: 12px 16px;
+      background: #F5F5F5;
+      border-radius: 12px 12px 0 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .android-bm-popup-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: #292524;
+    }
+
+    .android-popup-field {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .android-popup-field-label {
+      font-size: 8px;
+      color: #78716C;
+    }
+
+    .android-popup-field-input {
+      height: 24px;
+      border-radius: 6px;
+      background: #fff;
+      padding: 0 8px;
+      display: flex;
+      align-items: center;
+      font-size: 9px;
+      color: #292524;
+    }
+
+    /* Android suggestion list */
+    .android-suggestions {
+      display: flex;
+      flex-direction: column;
+      background: #fff;
+    }
+
+    .android-suggest-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      font-size: 10px;
+      color: #78716C;
+    }
+
+    .android-suggest-item.highlight {
+      background: rgba(234,88,12,0.03);
+      border: 1px solid #EA580C;
+      border-radius: 4px;
+      color: #EA580C;
+      font-weight: 600;
+    }
+
+    /* Android edit nav */
+    .android-edit-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 36px;
+      padding: 0 12px;
+      background: #fff;
     }
 
     /* ===== Footer ===== */
@@ -796,16 +1376,40 @@
 
       .guide-tabs {
         width: 100%;
+        overflow-x: auto;
       }
 
       .guide-tab {
         flex: 1;
         padding: 10px 12px;
-        font-size: 13px;
+        font-size: 12px;
+        white-space: nowrap;
       }
 
       .guide-content {
         padding: 0;
+      }
+
+      .vstep-row,
+      .vstep-row.reverse {
+        flex-direction: column;
+      }
+
+      .vstep-info {
+        width: 100%;
+      }
+
+      .vstep-mockup {
+        padding: 0;
+        width: 100%;
+      }
+
+      .chrome-mock {
+        max-width: 100%;
+      }
+
+      .mock-form-fields {
+        flex-direction: column;
       }
 
       .footer {
@@ -1066,137 +1670,465 @@
     <div class="guide-tabs">
       <button class="guide-tab active" data-tab="pc">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg>
-        PC
+        PC（Chrome）
       </button>
       <button class="guide-tab" data-tab="iphone">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
-        iPhone
+        iPhone（Safari）
       </button>
       <button class="guide-tab" data-tab="android">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
-        Android
+        Android（Chrome）
       </button>
     </div>
     <div class="guide-content">
-      <!-- PC -->
+      <!-- ===== PC (Chrome) ===== -->
       <div class="guide-panel active" id="panel-pc">
-        <div class="guide-card">
-          <div class="guide-card-header">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg>
-            PC / Chrome
+        <!-- PC Step 1: コードをコピー -->
+        <div class="vstep-row">
+          <div class="vstep-info">
+            <div class="vstep-badge primary">1</div>
+            <div class="vstep-title">コードをコピー</div>
+            <p class="vstep-desc">情報を入力して「ブックマークレットを生成」ボタンを押し、表示されたコードをコピーします</p>
           </div>
-          <div class="guide-card-divider"></div>
-          <div class="guide-step">
-            <div class="guide-step-num guide-step-num-active">1</div>
-            <div class="guide-step-text">
-              <div class="guide-step-title">コードをコピー</div>
-              <div class="guide-step-desc">「コードをコピー」ボタンをクリック</div>
+          <div class="vstep-mockup">
+            <div class="chrome-mock">
+              <div class="chrome-titlebar">
+                <div class="chrome-dots"><span class="chrome-dot red"></span><span class="chrome-dot yellow"></span><span class="chrome-dot green"></span></div>
+                <div class="chrome-addr">taizo-pro.github.io/itkenpo-automation</div>
+              </div>
+              <div class="chrome-body">
+                <div class="mock-section-label">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#EA580C" stroke-width="2"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+                  GENERATE
+                </div>
+                <div class="mock-btn orange">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+                  ブックマークレットを生成
+                </div>
+                <div style="font-size:11px;font-weight:600;color:#292524">生成されたコード</div>
+                <div class="mock-code-box" style="height:40px">
+                  <span class="mock-code-line accent">javascript:(function(){var d={"sign_no":"1234"..}</span>
+                  <span class="mock-code-line dim">})();</span>
+                </div>
+                <div class="mock-btn dark">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                  コードをコピー
+                </div>
+                <div class="mock-hint">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#EA580C" stroke-width="2"><path d="M18 11V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2"/><path d="M14 10V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 0 1 2 2v7.4a2 2 0 0 1-.6 1.4L15 23"/><path d="M6 15a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2"/></svg>
+                  ここをクリック！
+                </div>
+              </div>
             </div>
           </div>
-          <div class="guide-step-divider"></div>
-          <div class="guide-step">
-            <div class="guide-step-num guide-step-num-default">2</div>
-            <div class="guide-step-text">
-              <div class="guide-step-title">ブックマークバーを右クリック</div>
-              <div class="guide-step-desc">「ページを追加」を選択</div>
+        </div>
+
+        <!-- PC Step 2: ブックマークバーに追加 -->
+        <div class="vstep-row reverse">
+          <div class="vstep-info">
+            <div class="vstep-badge dark">2</div>
+            <div class="vstep-title">ブックマークバーに追加</div>
+            <p class="vstep-desc">ブックマークバーを右クリックして「ページを追加」を選び、URL欄にコピーしたコードを貼り付けます</p>
+          </div>
+          <div class="vstep-mockup">
+            <div class="chrome-mock">
+              <div class="chrome-titlebar">
+                <div class="chrome-dots"><span class="chrome-dot red"></span><span class="chrome-dot yellow"></span><span class="chrome-dot green"></span></div>
+                <div class="chrome-addr">chrome://bookmarks</div>
+              </div>
+              <div class="chrome-bbar">
+                <div class="chrome-bm-item highlight">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#EA580C" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  ITS健保カンタン入力
+                </div>
+              </div>
+              <div class="chrome-ctx">右クリック → 「ページを追加」→ URL欄にコードを貼り付け</div>
             </div>
           </div>
-          <div class="guide-step-divider"></div>
-          <div class="guide-step">
-            <div class="guide-step-num guide-step-num-default">3</div>
-            <div class="guide-step-text">
-              <div class="guide-step-title">URL欄にコードを貼り付け</div>
-              <div class="guide-step-desc">名前は「ITS健保自動入力」などお好みで</div>
+        </div>
+
+        <!-- PC Step 3: フォームページでクリック -->
+        <div class="vstep-row">
+          <div class="vstep-info">
+            <div class="vstep-badge primary">3</div>
+            <div class="vstep-title">フォームページでクリック</div>
+            <p class="vstep-desc">ITS健保の施設抽選申込フォームを開き、ブックマークバーの「ITS健保カンタン入力」をクリックします</p>
+          </div>
+          <div class="vstep-mockup">
+            <div class="chrome-mock">
+              <div class="chrome-titlebar">
+                <div class="chrome-dots"><span class="chrome-dot red"></span><span class="chrome-dot yellow"></span><span class="chrome-dot green"></span></div>
+                <div class="chrome-addr">www.its-kenpo.or.jp/kanri/form/edit_apply</div>
+              </div>
+              <div class="chrome-bbar">
+                <div class="chrome-bm-item highlight">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#EA580C" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  ITS健保カンタン入力
+                </div>
+                <div class="mock-click-hint">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#EA580C" stroke-width="2"><path d="M9 3 5 6.99h3V14h2V6.99h3L9 3zm7 14.01V10h-2v7.01h-3L15 21l4-3.99h-3z"/></svg>
+                  クリック！
+                </div>
+              </div>
+              <div class="chrome-body">
+                <div class="mock-form-title">施設抽選申込フォーム</div>
+                <div style="height:1px;background:#E5E7EB"></div>
+                <div class="mock-form-fields">
+                  <div class="mock-form-col">
+                    <div class="mock-field"><span class="mock-field-label">記号</span><div class="mock-field-input"></div></div>
+                    <div class="mock-field"><span class="mock-field-label">番号</span><div class="mock-field-input"></div></div>
+                    <div class="mock-field"><span class="mock-field-label">事業所名</span><div class="mock-field-input"></div></div>
+                  </div>
+                  <div class="mock-form-col">
+                    <div class="mock-field"><span class="mock-field-label">カナ氏名</span><div class="mock-field-input"></div></div>
+                    <div class="mock-field"><span class="mock-field-label">生年月日</span><div class="mock-field-input"></div></div>
+                    <div class="mock-field"><span class="mock-field-label">電話番号</span><div class="mock-field-input"></div></div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="guide-step-divider"></div>
-          <div class="guide-step">
-            <div class="guide-step-num guide-step-num-default">4</div>
-            <div class="guide-step-text">
-              <div class="guide-step-title">申込ページでブックマークをクリック</div>
-              <div class="guide-step-desc">ITS健保の施設抽選申込ページを開き、ブックマークバーから実行</div>
+        </div>
+
+        <!-- PC Step 4: 自動入力完了 -->
+        <div class="vstep-row reverse">
+          <div class="vstep-info">
+            <div class="vstep-badge dark">4</div>
+            <div class="vstep-title">自動入力完了！</div>
+            <p class="vstep-desc">ワンクリックでフォームの全項目が自動で入力されます。あとは内容を確認して送信するだけ！</p>
+          </div>
+          <div class="vstep-mockup">
+            <div class="chrome-mock">
+              <div class="chrome-titlebar">
+                <div class="chrome-dots"><span class="chrome-dot red"></span><span class="chrome-dot yellow"></span><span class="chrome-dot green"></span></div>
+                <div class="chrome-addr">www.its-kenpo.or.jp/kanri/form/edit_apply</div>
+              </div>
+              <div class="chrome-bbar">
+                <div class="chrome-bm-item normal">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#78716C" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  ITS健保カンタン入力
+                </div>
+              </div>
+              <div class="chrome-body">
+                <div class="mock-form-title">施設抽選申込フォーム</div>
+                <div style="height:1px;background:#E5E7EB"></div>
+                <div class="mock-form-fields">
+                  <div class="mock-form-col">
+                    <div class="mock-field"><span class="mock-field-label">記号</span><div class="mock-field-input filled">1234</div></div>
+                    <div class="mock-field"><span class="mock-field-label">番号</span><div class="mock-field-input filled">5678</div></div>
+                    <div class="mock-field"><span class="mock-field-label">事業所名</span><div class="mock-field-input filled">株式会社〇〇</div></div>
+                  </div>
+                  <div class="mock-form-col">
+                    <div class="mock-field"><span class="mock-field-label">カナ氏名</span><div class="mock-field-input filled">ヤマダ タロウ</div></div>
+                    <div class="mock-field"><span class="mock-field-label">生年月日</span><div class="mock-field-input filled">平成2年4月1日</div></div>
+                    <div class="mock-field"><span class="mock-field-label">電話番号</span><div class="mock-field-input filled">090-1234-5678</div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="mock-toast">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+                自動入力が完了しました！
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <!-- iPhone -->
+
+      <!-- ===== iPhone (Safari) ===== -->
       <div class="guide-panel" id="panel-iphone">
-        <div class="guide-card">
-          <div class="guide-card-header">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
-            iPhone / Safari
+        <!-- iPhone Step 1: コードをコピー -->
+        <div class="vstep-row">
+          <div class="vstep-info">
+            <div class="vstep-badge primary">1</div>
+            <div class="vstep-title">コードをコピー</div>
+            <p class="vstep-desc">「ブックマークレットを生成」ボタンを押した後、「コードをコピー」ボタンをタップします</p>
           </div>
-          <div class="guide-card-divider"></div>
-          <div class="guide-step">
-            <div class="guide-step-num guide-step-num-active">1</div>
-            <div class="guide-step-text">
-              <div class="guide-step-title">コードをコピー</div>
-              <div class="guide-step-desc">上のコピーボタンをタップ</div>
+          <div class="vstep-mockup">
+            <div class="iphone-mock">
+              <div class="iphone-screen white">
+                <div class="phone-statusbar"><span>9:41</span><div class="phone-statusbar-icons"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#292524" stroke-width="2"><path d="M2 20h.01"/><path d="M7 20v-4"/><path d="M12 20v-8"/><path d="M17 20V8"/></svg><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#292524" stroke-width="2"><path d="M5 13a10 10 0 0 1 14 0"/><path d="M8.5 16.5a5 5 0 0 1 7 0"/><circle cx="12" cy="20" r="1"/></svg><svg width="14" height="10" viewBox="0 0 24 24" fill="#292524" stroke="none"><rect x="2" y="6" width="18" height="12" rx="2"/><rect x="20" y="10" width="2" height="4" rx="1"/></svg></div></div>
+                <div class="phone-body-content">
+                  <div class="phone-btn orange">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+                    ブックマークレットを生成
+                  </div>
+                  <div class="phone-code-box" style="height:36px">
+                    <span class="phone-code-line dim">javascript:(function(){</span>
+                    <span class="phone-code-line accent">var d={"sign_no":"1234"..}</span>
+                  </div>
+                  <div class="phone-btn dark">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                    コードをコピー
+                  </div>
+                  <div class="phone-hint">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#EA580C" stroke-width="2"><path d="M18 11V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2"/><path d="M14 10V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 0 1 2 2v7.4a2 2 0 0 1-.6 1.4L15 23"/><path d="M6 15a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2"/></svg>
+                    ここをタップ！
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="guide-step-divider"></div>
-          <div class="guide-step">
-            <div class="guide-step-num guide-step-num-default">2</div>
-            <div class="guide-step-text">
-              <div class="guide-step-title">ブックマークに追加</div>
-              <div class="guide-step-desc">任意のページをブックマーク</div>
+        </div>
+
+        <!-- iPhone Step 2: 適当なページをブックマーク -->
+        <div class="vstep-row reverse">
+          <div class="vstep-info">
+            <div class="vstep-badge dark">2</div>
+            <div class="vstep-title">適当なページをブックマーク</div>
+            <p class="vstep-desc">Safariで適当なページを開き、共有ボタンから「ブックマークを追加」をタップして保存します</p>
+          </div>
+          <div class="vstep-mockup">
+            <div class="iphone-mock">
+              <div class="iphone-screen gray">
+                <div class="phone-statusbar"><span>9:41</span><div class="phone-statusbar-icons"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#292524" stroke-width="2"><path d="M2 20h.01"/><path d="M7 20v-4"/><path d="M12 20v-8"/><path d="M17 20V8"/></svg><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#292524" stroke-width="2"><path d="M5 13a10 10 0 0 1 14 0"/><path d="M8.5 16.5a5 5 0 0 1 7 0"/><circle cx="12" cy="20" r="1"/></svg><svg width="14" height="10" viewBox="0 0 24 24" fill="#292524" stroke="none"><rect x="2" y="6" width="18" height="12" rx="2"/><rect x="20" y="10" width="2" height="4" rx="1"/></svg></div></div>
+                <div class="phone-page-area"></div>
+                <div class="safari-share-sheet">
+                  <div class="share-handle"><div class="share-handle-bar"></div></div>
+                  <div class="share-divider"></div>
+                  <div class="share-item">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#007AFF" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                    コピー
+                  </div>
+                  <div class="share-divider"></div>
+                  <div class="share-item highlight">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#007AFF" stroke-width="2"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>
+                    ブックマークを追加
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#EA580C" stroke-width="2"><path d="m12 19-7-7 1.41-1.41L12 16.17l5.59-5.58L19 12l-7 7z"/></svg>
+                  </div>
+                  <div class="share-divider"></div>
+                  <div class="share-item">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#007AFF" stroke-width="2"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg>
+                    リーディングリストに追加
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="guide-step-divider"></div>
-          <div class="guide-step">
-            <div class="guide-step-num guide-step-num-default">3</div>
-            <div class="guide-step-text">
-              <div class="guide-step-title">ブックマークを編集</div>
-              <div class="guide-step-desc">URLをコピーしたコードに書き換え</div>
+        </div>
+
+        <!-- iPhone Step 3: ブックマークを編集 -->
+        <div class="vstep-row">
+          <div class="vstep-info">
+            <div class="vstep-badge primary">3</div>
+            <div class="vstep-title">ブックマークを編集</div>
+            <p class="vstep-desc">ブックマーク一覧から保存したブックマークの「編集」を開き、URL欄をコピーしたコードに書き換えます</p>
+          </div>
+          <div class="vstep-mockup">
+            <div class="iphone-mock">
+              <div class="iphone-screen gray">
+                <div class="phone-statusbar"><span>9:41</span><div class="phone-statusbar-icons"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#292524" stroke-width="2"><path d="M2 20h.01"/><path d="M7 20v-4"/><path d="M12 20v-8"/><path d="M17 20V8"/></svg><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#292524" stroke-width="2"><path d="M5 13a10 10 0 0 1 14 0"/><path d="M8.5 16.5a5 5 0 0 1 7 0"/><circle cx="12" cy="20" r="1"/></svg><svg width="14" height="10" viewBox="0 0 24 24" fill="#292524" stroke="none"><rect x="2" y="6" width="18" height="12" rx="2"/><rect x="20" y="10" width="2" height="4" rx="1"/></svg></div></div>
+                <div class="safari-edit-nav">
+                  <span class="cancel">キャンセル</span>
+                  <span class="title">ブックマークを編集</span>
+                  <span class="done">完了</span>
+                </div>
+                <div class="share-divider"></div>
+                <div class="edit-form">
+                  <div class="edit-field">
+                    <span class="edit-field-label">名前</span>
+                    <div class="edit-field-input">ITS健保カンタン入力</div>
+                  </div>
+                  <div class="share-divider"></div>
+                  <div class="edit-field">
+                    <span class="edit-field-label">URL</span>
+                    <div class="edit-field-input code">javascript:(function()...</div>
+                  </div>
+                  <div class="phone-hint">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#EA580C" stroke-width="2"><path d="m18 15-6-6-6 6"/></svg>
+                    ここにコードを貼り付け！
+                  </div>
+                  <div class="edit-field">
+                    <span class="edit-field-label">場所</span>
+                    <div class="edit-field-input">お気に入り</div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="guide-step-divider"></div>
-          <div class="guide-step">
-            <div class="guide-step-num guide-step-num-default">4</div>
-            <div class="guide-step-text">
-              <div class="guide-step-title">申込ページでブックマークを実行</div>
-              <div class="guide-step-desc">ブックマーク一覧から登録したブックマークをタップ</div>
+        </div>
+
+        <!-- iPhone Step 4: ブックマークで自動入力 -->
+        <div class="vstep-row reverse">
+          <div class="vstep-info">
+            <div class="vstep-badge dark">4</div>
+            <div class="vstep-title">ブックマークで自動入力</div>
+            <p class="vstep-desc">ITS健保のフォームページを開いた状態で、ブックマークから「ITS健保カンタン入力」をタップすれば完了！</p>
+          </div>
+          <div class="vstep-mockup">
+            <div class="iphone-mock">
+              <div class="iphone-screen white">
+                <div class="phone-statusbar"><span>9:41</span><div class="phone-statusbar-icons"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#292524" stroke-width="2"><path d="M2 20h.01"/><path d="M7 20v-4"/><path d="M12 20v-8"/><path d="M17 20V8"/></svg><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#292524" stroke-width="2"><path d="M5 13a10 10 0 0 1 14 0"/><path d="M8.5 16.5a5 5 0 0 1 7 0"/><circle cx="12" cy="20" r="1"/></svg><svg width="14" height="10" viewBox="0 0 24 24" fill="#292524" stroke="none"><rect x="2" y="6" width="18" height="12" rx="2"/><rect x="20" y="10" width="2" height="4" rx="1"/></svg></div></div>
+                <div class="safari-addr">its-kenpo.or.jp</div>
+                <div class="phone-form-body">
+                  <div class="phone-form-title">施設抽選申込フォーム</div>
+                  <div style="height:1px;background:#E5E7EB"></div>
+                  <div class="phone-field"><span class="phone-field-label">記号</span><div class="phone-field-input">1234</div></div>
+                  <div class="phone-field"><span class="phone-field-label">番号</span><div class="phone-field-input">5678</div></div>
+                  <div class="phone-field"><span class="phone-field-label">事業所名</span><div class="phone-field-input">株式会社〇〇</div></div>
+                  <div class="phone-field"><span class="phone-field-label">カナ氏名</span><div class="phone-field-input">ヤマダ タロウ</div></div>
+                </div>
+                <div class="phone-toast">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+                  自動入力が完了しました！
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <!-- Android -->
+
+      <!-- ===== Android (Chrome) ===== -->
       <div class="guide-panel" id="panel-android">
-        <div class="guide-card">
-          <div class="guide-card-header">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
-            Android / Chrome
+        <!-- Android Step 1: コードをコピー -->
+        <div class="vstep-row">
+          <div class="vstep-info">
+            <div class="vstep-badge primary">1</div>
+            <div class="vstep-title">コードをコピー</div>
+            <p class="vstep-desc">「ブックマークレットを生成」ボタンを押した後、「コードをコピー」ボタンをタップします</p>
           </div>
-          <div class="guide-card-divider"></div>
-          <div class="guide-step">
-            <div class="guide-step-num guide-step-num-active">1</div>
-            <div class="guide-step-text">
-              <div class="guide-step-title">コードをコピー</div>
-              <div class="guide-step-desc">上のコピーボタンをタップ</div>
+          <div class="vstep-mockup">
+            <div class="android-mock">
+              <div class="android-screen">
+                <div class="android-statusbar"><span>12:30</span><div class="phone-statusbar-icons"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#292524" stroke-width="2"><path d="M2 20h.01"/><path d="M7 20v-4"/><path d="M12 20v-8"/><path d="M17 20V8"/></svg><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#292524" stroke-width="2"><path d="M5 13a10 10 0 0 1 14 0"/><path d="M8.5 16.5a5 5 0 0 1 7 0"/><circle cx="12" cy="20" r="1"/></svg><svg width="14" height="10" viewBox="0 0 24 24" fill="#292524" stroke="none"><rect x="2" y="6" width="18" height="12" rx="2"/><rect x="20" y="10" width="2" height="4" rx="1"/></svg></div></div>
+                <div class="phone-body-content">
+                  <div class="phone-btn orange">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+                    ブックマークレットを生成
+                  </div>
+                  <div class="phone-code-box" style="height:36px">
+                    <span class="phone-code-line dim">javascript:(function(){</span>
+                    <span class="phone-code-line accent">var d={"sign_no":"1234"..}</span>
+                  </div>
+                  <div class="phone-btn dark">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                    コードをコピー
+                  </div>
+                  <div class="phone-hint">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#EA580C" stroke-width="2"><path d="M18 11V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2"/><path d="M14 10V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 0 1 2 2v7.4a2 2 0 0 1-.6 1.4L15 23"/><path d="M6 15a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2"/></svg>
+                    ここをタップ！
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="guide-step-divider"></div>
-          <div class="guide-step">
-            <div class="guide-step-num guide-step-num-default">2</div>
-            <div class="guide-step-text">
-              <div class="guide-step-title">Chromeで新しいブックマーク追加</div>
-              <div class="guide-step-desc">メニュー → ブックマーク → 追加</div>
+        </div>
+
+        <!-- Android Step 2: 適当なページをブックマーク -->
+        <div class="vstep-row reverse">
+          <div class="vstep-info">
+            <div class="vstep-badge dark">2</div>
+            <div class="vstep-title">適当なページをブックマーク</div>
+            <p class="vstep-desc">Chromeで適当なページを開き、アドレスバー右の☆アイコンをタップしてブックマークに保存します</p>
+          </div>
+          <div class="vstep-mockup">
+            <div class="android-mock">
+              <div class="android-screen">
+                <div class="android-statusbar"><span>12:30</span><div class="phone-statusbar-icons"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#292524" stroke-width="2"><path d="M2 20h.01"/><path d="M7 20v-4"/><path d="M12 20v-8"/><path d="M17 20V8"/></svg><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#292524" stroke-width="2"><path d="M5 13a10 10 0 0 1 14 0"/><path d="M8.5 16.5a5 5 0 0 1 7 0"/><circle cx="12" cy="20" r="1"/></svg><svg width="14" height="10" viewBox="0 0 24 24" fill="#292524" stroke="none"><rect x="2" y="6" width="18" height="12" rx="2"/><rect x="20" y="10" width="2" height="4" rx="1"/></svg></div></div>
+                <div class="android-chrome-bar">
+                  <div class="android-url-pill">example.com</div>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#EA580C" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#78716C" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+                </div>
+                <div style="height:40px;background:#fff"></div>
+                <div class="android-bm-popup">
+                  <div class="android-bm-popup-title">ブックマークを追加しました</div>
+                  <div class="android-popup-field">
+                    <span class="android-popup-field-label">名前</span>
+                    <div class="android-popup-field-input">Example Page</div>
+                  </div>
+                  <div class="android-popup-field">
+                    <span class="android-popup-field-label">フォルダ</span>
+                    <div class="android-popup-field-input">モバイルのブックマーク</div>
+                  </div>
+                  <div class="phone-hint">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#EA580C" stroke-width="2"><path d="m18 15-6-6-6 6"/></svg>
+                    ☆をタップして保存！
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="guide-step-divider"></div>
-          <div class="guide-step">
-            <div class="guide-step-num guide-step-num-default">3</div>
-            <div class="guide-step-text">
-              <div class="guide-step-title">URL欄にコードを貼り付け</div>
-              <div class="guide-step-desc">ブックマークを編集してURLをコードに変更</div>
+        </div>
+
+        <!-- Android Step 3: ブックマークを編集 -->
+        <div class="vstep-row">
+          <div class="vstep-info">
+            <div class="vstep-badge primary">3</div>
+            <div class="vstep-title">ブックマークを編集</div>
+            <p class="vstep-desc">ブックマーク一覧から保存したブックマークの「︙」→「編集」を開き、URL欄をコピーしたコードに書き換えます</p>
+          </div>
+          <div class="vstep-mockup">
+            <div class="android-mock">
+              <div class="android-screen">
+                <div class="android-statusbar"><span>12:30</span><div class="phone-statusbar-icons"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#292524" stroke-width="2"><path d="M2 20h.01"/><path d="M7 20v-4"/><path d="M12 20v-8"/><path d="M17 20V8"/></svg><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#292524" stroke-width="2"><path d="M5 13a10 10 0 0 1 14 0"/><path d="M8.5 16.5a5 5 0 0 1 7 0"/><circle cx="12" cy="20" r="1"/></svg><svg width="14" height="10" viewBox="0 0 24 24" fill="#292524" stroke="none"><rect x="2" y="6" width="18" height="12" rx="2"/><rect x="20" y="10" width="2" height="4" rx="1"/></svg></div></div>
+                <div class="android-edit-nav">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#292524" stroke-width="2"><path d="m12 19-7-7 7-7"/></svg>
+                  <span style="font-size:11px;font-weight:600;color:#292524">ブックマークを編集</span>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#007AFF" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <div class="share-divider"></div>
+                <div class="edit-form">
+                  <div class="edit-field">
+                    <span class="edit-field-label">名前</span>
+                    <div class="edit-field-input">ITS健保カンタン入力</div>
+                  </div>
+                  <div class="share-divider"></div>
+                  <div class="edit-field">
+                    <span class="edit-field-label">URL</span>
+                    <div class="edit-field-input code">javascript:(function()...</div>
+                  </div>
+                  <div class="phone-hint">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#EA580C" stroke-width="2"><path d="m18 15-6-6-6 6"/></svg>
+                    ここにコードを貼り付け！
+                  </div>
+                  <div class="edit-field">
+                    <span class="edit-field-label">フォルダ</span>
+                    <div class="edit-field-input">モバイルのブックマーク</div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="guide-step-divider"></div>
-          <div class="guide-step">
-            <div class="guide-step-num guide-step-num-default">4</div>
-            <div class="guide-step-text">
-              <div class="guide-step-title">申込ページでブックマークを実行</div>
-              <div class="guide-step-desc">アドレスバーにブックマーク名を入力して選択</div>
+        </div>
+
+        <!-- Android Step 4: アドレスバーから実行 -->
+        <div class="vstep-row reverse">
+          <div class="vstep-info">
+            <div class="vstep-badge dark">4</div>
+            <div class="vstep-title">アドレスバーから実行</div>
+            <p class="vstep-desc">ITS健保のフォームページを開いた状態で、アドレスバーに「ITS健保」と入力し、サジェストに表示されたブックマークをタップします</p>
+          </div>
+          <div class="vstep-mockup">
+            <div class="android-mock">
+              <div class="android-screen">
+                <div class="android-statusbar"><span>12:30</span><div class="phone-statusbar-icons"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#292524" stroke-width="2"><path d="M2 20h.01"/><path d="M7 20v-4"/><path d="M12 20v-8"/><path d="M17 20V8"/></svg><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#292524" stroke-width="2"><path d="M5 13a10 10 0 0 1 14 0"/><path d="M8.5 16.5a5 5 0 0 1 7 0"/><circle cx="12" cy="20" r="1"/></svg><svg width="14" height="10" viewBox="0 0 24 24" fill="#292524" stroke="none"><rect x="2" y="6" width="18" height="12" rx="2"/><rect x="20" y="10" width="2" height="4" rx="1"/></svg></div></div>
+                <div class="android-chrome-bar">
+                  <div class="android-url-pill typing">ITS健保カンタン</div>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#78716C" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                </div>
+                <div class="android-suggestions">
+                  <div class="share-divider"></div>
+                  <div class="android-suggest-item">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#78716C" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                    ITS健保カンタン入力 検索
+                  </div>
+                  <div class="share-divider"></div>
+                  <div class="android-suggest-item highlight">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#EA580C" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    ITS健保カンタン入力
+                  </div>
+                  <div class="share-divider"></div>
+                  <div class="android-suggest-item">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#78716C" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                    its-kenpo.or.jp
+                  </div>
+                  <div class="phone-hint" style="padding:6px 0">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#EA580C" stroke-width="2"><path d="M18 11V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2"/><path d="M14 10V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 0 1 2 2v7.4a2 2 0 0 1-.6 1.4L15 23"/><path d="M6 15a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2"/></svg>
+                    これをタップ！
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
